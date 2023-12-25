@@ -1,3 +1,5 @@
+//eficiencia del algoritmo es $O(n)$
+//https://open.kattis.com/problems/purplerain
 #include <bits/stdc++.h>
 
 typedef std::vector<int> list;

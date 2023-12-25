@@ -1,3 +1,6 @@
+//La complejidad de este algoritmo es O(n);
+//https://onlinejudge.org/index.php?option=onlinejudge&Itemid=8&page=show_problem&problem=2890
+
 #include <bits/stdc++.h>
 typedef std::vector<int> list;
 

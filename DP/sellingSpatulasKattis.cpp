@@ -1,3 +1,6 @@
+//La complejodad de este algoritmo es $O(n^2)$
+//https://open.kattis.com/problems/sellingspatulas
+
 #include <bits/stdc++.h>
 typedef std::vector<long double> list;
 
