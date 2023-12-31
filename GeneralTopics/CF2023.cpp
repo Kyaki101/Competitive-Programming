@@ -1,8 +1,7 @@
 #include<bits/stdc++.h>
 int n;
 int k;
-int prod = 1;
-std::vector<int> array;
+long long int prod = 1;
 
 void sol(){
     bool bad = false;
@@ -11,7 +10,7 @@ void sol(){
         std::cout << "NO\n"; return;
     }
     std::cout << "YES\n";
-    std::cout << 2023/prod;
+    std::cout << 2023L/prod;
     for(int i = 1; i < k; i++)std::cout << " " << 1;
     std::cout << '\n';
 
@@ -24,13 +23,11 @@ int main(){
     std::cin >> t;
     while(t--){
         std::cin >> n >> k;
-        array.assign(n, 0);
         prod = 1;
         for(int i = 0; i < n; i ++){
             int temp;
             std::cin >> temp;
             prod *= temp;
-            array[i] = temp;
         }
         sol();
     }
