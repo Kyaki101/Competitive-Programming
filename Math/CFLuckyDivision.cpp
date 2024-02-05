@@ -1,4 +1,7 @@
-int n;
+/*
+https://codeforces.com/problemset/problem/122/A
+*/
+
 #include <bits/stdc++.h>
 
 
