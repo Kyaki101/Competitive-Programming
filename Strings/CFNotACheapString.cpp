@@ -1,4 +1,6 @@
-/**/
+/*
+https://codeforces.com/contest/1702/problem/D
+*/
 
 #include <bits/stdc++.h>
 
