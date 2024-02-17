@@ -1,3 +1,6 @@
+/*
+https://codeforces.com/problemset/problem/791/A
+*/
 #include <bits/stdc++.h>
 
 
