@@ -9,9 +9,9 @@ typedef std::vector<int> vec;
 using namespace std;
 
 void sol(){
-    int a, b, c;
+    ll a, b, c;
     cin >> a >> b >> c;
-    int price = ((c*(c+1))/2) * a;
+    ll price = (ll)((c*(c+1))/2) * a;
     cout << price - b << '\n';
 }
 
