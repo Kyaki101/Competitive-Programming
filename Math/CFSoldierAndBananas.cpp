@@ -12,7 +12,10 @@ void sol(){
     ll a, b, c;
     cin >> a >> b >> c;
     ll price = (ll)((c*(c+1))/2) * a;
-    cout << price - b << '\n';
+    if(price > b){
+        cout << price - b << '\n';
+    }
+    else cout << "0\n";
 }
 
 int main(){
