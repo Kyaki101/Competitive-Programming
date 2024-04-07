@@ -1,3 +1,8 @@
+/*
+*https://codeforces.com/gym/105053/problem/K
+*/
+
+
 #include <bits/stdc++.h>
 
 
