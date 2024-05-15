@@ -1,5 +1,6 @@
-use std::io::{self, BufRead};
-use std::cmp;
+#![allow(unused)]
+
+use std::*;
 
 
 fn sol(){
