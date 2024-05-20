@@ -21,6 +21,8 @@ ll expoLog(ll x){
 }
 
 
+
+
 void bfs(vector<vector<ll> > & graph, vector<bool> & vis){
     ll curr = 0;
     queue<ll> cola;
