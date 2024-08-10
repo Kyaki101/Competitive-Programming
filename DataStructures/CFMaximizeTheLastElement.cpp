@@ -1,3 +1,8 @@
+/*
+*https://codeforces.com/contest/1991/problem/A
+*/
+
+
 #include <bits/stdc++.h>
 
 
@@ -5,22 +10,18 @@ typedef long long int ll;
 typedef std::vector<int> vec;
 using namespace std;
 
-string sq;
-
 void sol(){
-    cin >> sq;
-    int n = sq[1] - '0';
-    for(int i = 1; i <= 8; i++){
-        if(n != i){
-            cout << sq[0] << i << endl;
-        }
+    int n;
+    cin >> n;
+    vec nums(n);
+    for(int i = 0; i < n; i++){
+        cin >> nums[i];
     }
-    for(int i = 97; i <= 104; i++){
-        if((char)(i) != sq[0]){
-            cout << (char)(i) << n << endl;
-        }
+    int maxi = -1;
+    for(int i = 0; i < n; i++, i++){
+        maxi = max(maxi, nums[i]);
     }
-
+    cout << maxi << endl;
 }
 
 int main(){
@@ -36,3 +37,4 @@ int main(){
 
     return 0;
 }
+
