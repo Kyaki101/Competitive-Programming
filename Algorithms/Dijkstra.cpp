@@ -1,52 +1,65 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-vector<int> memo;
 
-vector<vector<pair<int, int>>> graph;
 
-bool comp(int a, int b){
-    return memo[a] > memo[b];
-}
+const int MAX = 2e5 + 10;
 
-void dijkstra(vector<vector<pair<int, int>>> graph, int src, vector<int> & memo, vector<bool> & vis){
-    vis[src] = 1;
-    priority_queue<int, vector<int>, function<bool(int, int)>> pq(comp);
+int memo[MAX] = {(1 << 30)};
+
+
+struct Compare {
+    bool operator()(int a, int b) {
+        return memo[a] < memo[b];
+    }
+};
+
+void dijkstra(vector<vector<pair<int, int>>> & graph, int src, bitset<MAX> & vis) {
+    memo[src] = 0;
+    priority_queue<int, vector<int>, Compare> pq;
     pq.push(src);
-    while(!pq.empty()){
+    vis.set(src);
+    while(!pq.empty()) {
         int node = pq.top();
-        cout << node << endl;
         pq.pop();
-        for(pair<int, int> i : graph[node]){
-            if(!vis[i.first]){
-                memo[i.first] = memo[node] + i.second;
-                pq.push(i.first);
-                vis[i.first] = true;
+        for(int i = 0; i < graph[node].size(); i++) {
+
+            if(memo[graph[node][i].first] > memo[node] + graph[node][i].second) {
+                memo[graph[node][i].first] = memo[node] + graph[node][i].second;
+                if(!vis.test(graph[node][i].first)) {
+                    vis.set(graph[node][i].first);
+                    pq.push(graph[node][i].first);
+                }
             }
-            else memo[i.first] = min(memo[i.first], memo[node] + i.second);
         }
     }
-    for(int i : memo)cout << i << " ";
-    cout << endl;
-    
-
 }
 
 int main(){
-    int nodes, edges, src;
-    cin >> nodes >> edges >> src;
-    src --;
-    memo.assign(nodes, (1<<30));
-    vector<bool> vis(nodes, false);
-    vector<vector<pair<int, int>>> graph(nodes);
-
-    for(int i = 0; i < edges; i++){
-        int a, b, w;
+    int n;
+    cin >> n;
+    vector<vector<pair<int, int>>> graph(n);
+    int m;
+    cin >> m;
+    int a, b, w;
+    for(int i = 0; i < m; i++) {
         cin >> a >> b >> w;
-        graph[a - 1].push_back(make_pair(b - 1, w));
+        a--;
+        b--;
+        graph[a].push_back({b, w});
+        graph[b].push_back({a, w});
     }
-    memo[src] = 0;
-    dijkstra(graph, src, memo, vis);
+    bitset<MAX> bits;
+    for(int i = 0; i < n; i++) {
+        memo[i] = (1 << 30);
+    }
+    dijkstra(graph, 0, bits);
+    for(int i = 0; i < n; i++) {
+        cout << memo[i] << " ";
+
+    }
+    cout << endl;
+
 
     return 0;
 }
