@@ -23,45 +23,40 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
     for(int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
+    sort(ALL(a));
+    ll q;
+    cin >> q;
+    for(int i = 0; i < q; i++) {
+        ll c, b;
+        cin >> c >> b;
+        ll l = -1, r = n;
+        while(r > l + 1) {
+            ll m = (l + r) / 2;
+            if(a[m] < c) l = m;
+            else r = m;
+        }
+        ll e = r + 1;
+        l = -1; r = n;
+        while(r > l + 1) {
+            ll m = (l + r) / 2;
+            if(a[m] <= b) l = m;
+            else r = m;
+        }
+        if(e - 1 < n && a[e - 1] < c || l > -1 && a[l] > b) {
+            cout << 0 << ' ';
+            return;
+        }
+        ll f = l + 1;
+        cout << min(f - e + 1, n) << ' ';
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
-
+    cout << endl;
 }
 
 int main(){
@@ -70,7 +65,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

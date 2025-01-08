@@ -23,45 +23,31 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
+    ll n, m, k;
+    cin >> n >> m >> k;
+    vector<ll> a(m);
+    for(int i = 0; i < m; i++) {
         cin >> a[i];
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
+    set<ll> mono;
+    for(int i = 0; i < k; i++) {
+        ll p;
+        cin >> p;
+        mono.insert(p);
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
+    string ans = "";
+    for(int i = 0; i < m; i++) {
+        if(mono.find(a[i]) != mono.end()) {
+            if(k - 1 >= n - 1) {
+                ans.push_back('1');
+            }
+            else ans.push_back('0');
+        }
+        else if(k >= n - 1) ans.push_back('1');
+        else ans.push_back('0');
     }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
-
+    cout << ans << endl;
 }
 
 int main(){

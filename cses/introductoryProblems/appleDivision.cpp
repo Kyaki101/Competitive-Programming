@@ -23,45 +23,43 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
+
+void combinations(vector<ll> & a, vector<ll> curr, ll i, vector<vector<ll> > & ans) {
+    if(i == a.size()) {
+        ans.push_back(curr);
+        return;
     }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
+    vector<ll> modi = curr;
+    modi.push_back(a[i]);
+    combinations(a, curr, i + 1, ans);
+    combinations(a, modi, i + 1, ans);
+    
 }
 
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    ll tot = 0;
     for(int i = 0; i < n; i++) {
         cin >> a[i];
+        tot += a[i];
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
-    }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
+    vector<vector<ll> > ans;
+    combinations(a, {}, 0, ans);
+    ll mini = (1 << 30);
+    for(vector<ll> & i : ans) {
+        ll pre = 0;
+        for(ll j : i) {
+            pre += j;
 
+            
+        }
+        ll other = tot - pre;
+        mini = min(abs(pre - other), mini);
+    }
+    cout << mini << endl;
+    
 }
 
 int main(){
@@ -70,7 +68,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

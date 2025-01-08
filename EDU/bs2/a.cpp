@@ -23,22 +23,28 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-void sol(){        
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    ll res = 0;
-    for(int i = 0; i < n - 1; i++) {
-        if(a[i] > a[i + 1]) {
+bool f(ll x, ll a, ll b, ll n) {
+    return (x / a) * (x / b) >= n;
+}
 
-            res += a[i] - a[i  + 1];
-            a[i + 1] = a[i];
-        }
+
+void sol(){        
+    ll a, b, n;
+    cin >> a >> b >> n;
+    ll l = 0;
+    ll r = 1;
+    while(!f(r, a, b, n)) {
+        r *= 2;
     }
-    cout << res << endl;
+    while(l + 1 < r) {
+        ll mid = (l + r) / 2;
+        if(f(mid, a, b, n)) {
+            r = mid;
+        }
+        else l = mid;
+    }
+    cout << r << endl;
+    
 }
 
 int main(){

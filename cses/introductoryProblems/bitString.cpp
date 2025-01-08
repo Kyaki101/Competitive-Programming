@@ -15,6 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
+#define MOD 1000000007
 
 
 typedef long long int ll;
@@ -23,44 +24,23 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
+
+
+ll exp(ll n, ll x) {
+    if(x == 0) {
+        return 1;
     }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
+    if(x & 1) {
+        return ((n % MOD) * (exp(n, x - 1) % MOD)) % MOD;
     }
-    return bb(start, mid + 1, upper, goal, acum);
+    ll y = exp(n, x / 2) % MOD;
+    return ((y % MOD) * (y % MOD)) % MOD;
 }
 
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
-    }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
+    ll n;
+    cin >> n;
+    cout << exp(2LL, n) << endl;
 
 }
 
@@ -70,7 +50,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

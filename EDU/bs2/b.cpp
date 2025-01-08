@@ -23,45 +23,33 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
+
+bool eval(vector<double> & a, double x, ll k) {
+    ll sum = 0;
+    for(int i = 0; i < a.size(); i++) {
+        sum += a[i] / x;
     }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
+    return sum >= k;
 }
 
 void sol(){        
     ll n, k;
     cin >> n >> k;
-    vector<ll> a(n, false);
+    vector<double> a(n);
     for(int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
+    double l = 0;
+    double r = 1e8;
+    for(int i = 0; i < 100; i++) {
+        double x = (l + r) / 2;
+        if(eval(a, x, k)) {
+            l = x;
+        }
+        else r = x;
+        
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
-
+    cout << setprecision(20) << l << endl;
 }
 
 int main(){
@@ -70,7 +58,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

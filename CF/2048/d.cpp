@@ -23,44 +23,42 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
+    ll n, m;
+    cin >> n >> m;
+    vector<ll> a(n);
+    vector<ll> b(m);
     for(int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
+    ll god = a[0];
+    for(int i = 0; i < m; i++) {
+        cin >> b[i];
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
+    sort(ALL(a));
+    vector<ll> wins(m);
+    for(int i = 0; i < m; i++) {
+        ll l = - 1;
+        ll r = n;
+        while(l + 1 < r) {
+            ll mid = (r + l) / 2;
+            if(a[mid] < b[i]) l = mid;
+            else r = mid;
+        }
+        wins[i] = n - r + 1;
+        if(a[r] <= god) wins[i] = 1;
     }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
+    sort(ALL(wins));
+    ll step = 1;
+    while(step <= m) {
+        ll res = 0;
+        for(int i = step - 1; i < m; i += step) {
+            res += wins[i];
+        }
+        cout << res << ' ';
+        step ++;
     }
-    cout << res << endl;
+    cout << endl;
 
 }
 

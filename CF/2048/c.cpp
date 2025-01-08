@@ -23,45 +23,26 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
+    string s;
+    cin >> s;
+    vector<ll> a(s.size() + 1, 0);
+    for(int i = 0; i < s.size(); i++) {
+        a[i + 1] = a[i] + (s[i] == '1');
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
+    ll j = 0;
+    while(j < s.size() && s[j] == '1') {
+        j ++;
+    }
+    if(j == s.size()) {
+        cout << 1 << ' ' << s.size() << ' ' << 1 <<' ' << 1 << endl;
         return;
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
+    ll k = j;
+    while(j < s.size() && j < k * 2 && s[j] == '0') {
+        j++;
     }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
-
+    cout << 1 << ' ' << s.size() << ' ' << max(1LL, k - (j - k) + 1) << ' ' << s.size() - min(k, (j - k)) << endl;
 }
 
 int main(){

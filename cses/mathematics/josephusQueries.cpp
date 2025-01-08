@@ -23,45 +23,32 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
     ll n, k;
     cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
+    if(k * 2 <= n) {
+        cout << k * 2 << endl;
         return;
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
+    k -= n / 2;
+    n = (n + 1) / 2;
+    ll ini = 1;
+    ll pow = 4;
+    while(k * 2 > n && !(k == 1 && n == 1)) {
+        k -= n / 2;
+        n = (n + 1) / 2;
+        ini += pow >> 1;
+        pow *= 2;
+    }
+    if(k == 1 && n == 1) {
+        cout << ini << endl;
         return;
     }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
 
+    /*cout << n << ' ' << k << endl;*/
+    /*cout << pow << endl;*/
+    /*cout << ini << endl;*/
+    cout << ini + pow * (k - 1) << endl;
 }
 
 int main(){

@@ -23,43 +23,46 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
+ll res;
+ll iters;
+
+
+
+
+void nQueens(vector<ll> pos, ll index, vector<string> & board) {
+    if(index == 8) {
+        res ++;
+        return;
     }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
+    for(int i = 0; i < 8; i++) {
+        vector<ll> cpy = pos;
+        cpy[index] = i;
+        bool valid = true;
+        for(int j = 0; j < index; j++) {
+            if(cpy[index] == cpy[j] || abs(index - j) == abs(cpy[index] - cpy[j])) {
+                valid = false;
+            }
+        }
+        if(valid && board[index][cpy[index]] != '*') {
+            nQueens(cpy, index + 1, board);
+        }
     }
-    return bb(start, mid + 1, upper, goal, acum);
+
+
 }
 
+
+
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
+    vector<string> board(8);
+    iters = 0;
+    res = 0;
+    for(int i = 0; i < 8; i++) {
+        cin >> board[i];
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
-    }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
+
+    vector<ll> pos(8);
+    nQueens(pos, 0, board);
     cout << res << endl;
 
 }
@@ -70,7 +73,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

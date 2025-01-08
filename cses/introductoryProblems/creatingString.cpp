@@ -23,25 +23,44 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
+
+vector<string> permutations(string a) {
+    if(a.size() == 0) {
+        vector<string> res(1, "");
+        return res;
+    }
+    vector<string> res;
+    for(int i = 0; i < a.size(); i++) {
+        char taken = a[i];
+        string b = a;
+        b.erase(b.begin() + i);
+        vector<string> pre = permutations(b);
+        for(string & j : pre) {
+            j.insert(j.begin(), a[i]);
+            res.push_back(j);
+        }
+
+    }
+
+    return res;
+
+
+}
+
 void sol(){        
     string s;
     cin >> s;
-    ll i = 1;
-    ll streak = 1;
-    ll ans = 0;
-    char prev = s[0];
-    while(i < s.size()) {
-        if(s[i] == prev) streak ++;
-        else {
-            ans = max(streak, ans);
-            streak = 1;
-        }
-        prev = s[i];
-        i ++;
-        
+    vector<string> ans = permutations(s);
+    set<string> res;
+    for(string i : ans) {
+        res.insert(i);
+
     }
-    ans = max(streak, ans);
-    cout << ans << endl;
+    cout << res.size() << endl;
+    for(auto i : res) {
+        cout << i << endl;
+    }
+    
 }
 
 int main(){

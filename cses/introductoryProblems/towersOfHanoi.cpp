@@ -23,26 +23,23 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
+
+void hanoi(ll n, ll start, ll end) {
+    if(n == 1) {
+        cout << start << ' ' << end << endl;
+        return;
+    }
+    ll other = 6 - (start + end);
+    hanoi(n - 1, start, other);
+    cout << start << ' ' << end << endl;
+    hanoi(n - 1, other, end);
+}
+
 void sol(){        
     ll n;
     cin >> n;
-    vector<ll> a(n - 1);
-    for(int i = 0; i < n - 1; i++) {
-        cin >> a[i];
-    }
-    sort(ALL(a));
-    if(a[0] != 1) {
-        cout << 1 << endl;
-        return;
-    }
-    for(int i = 1; i < n - 1; i++) {
-        if(a[i] - i != 1) {
-            cout << a[i] - 1 << endl;
-            return;
-        }
-    }
-    cout << n << endl;
-    
+    cout << (1 << n) - 1 << endl;
+    hanoi(n, 1, 3);
 }
 
 int main(){

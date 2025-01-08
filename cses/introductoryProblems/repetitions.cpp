@@ -24,15 +24,20 @@ using namespace std;
 const int MAX = 2e5+20;
 
 void sol(){        
-    ll n;
-    cin >> n;
-    cout << n << ' ';
-    while(n != 1) {
-        if(n & 1) n = n * 3 + 1;
-        else n /= 2;
-        cout << n << ' ';
+    string s;
+    cin >> s;
+    ll streak = 1;
+    ll maxi = 1;
+    for(int i = 0; i < s.size(); i++) {
+        if(s[i] == s[i - 1]) {
+            streak ++;
+            maxi = max(streak, maxi);
+        }
+        else {
+            streak = 1;
+        }
     }
-    cout << endl;
+    cout << maxi << endl;
 }
 
 int main(){

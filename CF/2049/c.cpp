@@ -23,44 +23,54 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
+    ll n, x, y;
+    cin >> n >> x >> y;
+    vector<vector<ll> > g(n + 1);
+    g[1].push_back(n);
+    if(x != y - 1 && x != y + 1 && x != y && !(x == 1 && y == n || x == n && y == 1)) {
+
+        g[x].push_back(y);
+
+        g[y].push_back(x);
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
+    g[n].push_back(1);
+    g[n].push_back(n - 1);
+    g[1].push_back(2);
+    for(int i = 2; i < n; i++) {
+        g[i].push_back(i - 1);
+        g[i].push_back(i + 1);
     }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
+    vector<ll> mex(n + 1);
+    for(int i = 1; i <= n; i++) {
+        mex[i] = g[i].size();
     }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
+
+    mex[x] = 0;
+    mex[y] = 1;
+
+    for(int i = 1; i <= n; i++) {
+        if(i != x && i != y) {
+
+            vector<ll> f;
+            for(int j = 0; j < g[i].size(); j++) {
+                f.push_back(mex[g[i][j]]);
+            }
+            ll me = 0;
+            sort(ALL(f));
+            for(ll j : f) {
+                if(j == me) {
+                    me++;
+                }
+            }
+            mex[i] = me;
+
+        }
     }
-    cout << res << endl;
+    for(ll i = 1; i <= n; i++) {
+        cout << mex[i] << ' ';
+    }
+    cout << endl;
 
 }
 

@@ -23,45 +23,27 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
-    }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
+    ll n;
+    cin >> n;
 
+    ll top = 9;
+    ll pre = 0;
+    ll digits = 1;
+    ll power = 0;
+    ll group = 9;
+    while(n > top) {
+        power ++;
+        digits ++;
+        group = digits * pow(10, power) * 9;
+        pre = top;
+        top += group; 
+    }
+    n -= pre;
+    cout << pre << endl;
+    string s = to_string(pow(10, power) + (n  - 1) / digits);
+    cout << s[(n - 1) % digits] << endl;
+    //cout << pow(10, power) + (n - 1) / digits << ' ' << (n - 1) % digits << endl;
 }
 
 int main(){

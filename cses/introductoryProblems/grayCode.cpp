@@ -23,45 +23,31 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-ll bb(ll start, ll lower, ll upper, ll goal, vector<ll> & acum) {
-    ll mid = (lower + upper) / 2;
-    if(lower == upper) return lower;
-    ll n = acum.size() - 1;
-    if(mid == n) {
-        return n;
-    }
-    if(acum[mid] - acum[start - 1] == goal && acum[mid + 1] - acum[start - 1] > goal) return mid;
-    if(acum[mid] - acum[start - 1] > goal) {
-        return bb(start, lower, mid - 1, goal, acum);
-    }
-    return bb(start, mid + 1, upper, goal, acum);
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(n, false);
+    ll n;
+    cin >> n;
+    vector<string> a;
+    string s = "";
     for(int i = 0; i < n; i++) {
-        cin >> a[i];
+        s += '0';
     }
-    vector<ll> acum(n + 1, 0);
-    partial_sum(ALL(a), acum.begin() + 1);
-    if(acum[n] == k) {
-        cout << 0 << endl;
-        return;
-    }
-    if(acum[n] < k) {
-        cout << -1 << endl;
-        return;
-    }
-    ll res = (1 << 30);
-    for(int i = 0; i < n && acum[n] - acum[i] >= k; i++) {
-        ll pre = bb(i + 1, i + 1, n, k, acum);
-        res = min(res, n - (pre - (i)));
-             
-    }
-    cout << res << endl;
+    a.push_back(s);
+    a.push_back(s);
+    a[0][n - 1] = '1';
 
+    if(n == 1) {
+        cout << 1 << endl << 0 << endl;
+        return;
+    }
+    for(int i = 2; i <= n; i++) {
+        for(int j = a.size() - 1; j > -1; j--) {
+            a.push_back(a[j]);
+            a[a.size() - 1][n - i] = '1';
+        }
+    }
+    for(string & i : a) {
+        if(i.size() > 1) cout << i << endl;
+    }
 }
 
 int main(){
@@ -70,7 +56,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }
