@@ -23,29 +23,56 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
-
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    map<ll, ll> mapa;
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+        mapa[a[i]] ++;
+    }
+    ll legs = 0;
+    bool l = false;
+    for(auto i : mapa) {
+        if(i.first > legs && i.second >= 2) {
+            legs = i.first;
+            l = true;
+        }
+    }
+    if(!l) {
+        cout << -1 << endl;
+        return;
+    }
+    mapa[legs] -= 2;
+    sort(ALL(a));
+    ll found = true;
+    bool upF = false;
+    bool downF = false;
+    vector<ll> c;
+    for(auto i : mapa) {
+        while(i.second > 0) {
+            i.second --;
+            c.push_back(i.first);
+        }
+    }
+    sort(ALL(c));
+    ll diff = (1 << 30);
+    ll up, down;
+    for(int i = 0; i < c.size() - 1; i++) {
+        if(c[i + 1] - c[i] < diff) {
+            diff = c[i + 1] - c[i];
+            up = c[i];
+            down = c[i + 1];
+        }
+
+    }
+    double minSize = (down - up * 1.0) / 2.0;
+    if(legs <= minSize) {
+        cout << -1 << endl;
+        return;
+    }
+    cout << legs << ' ' << legs << ' '<< up << ' ' << down << endl;
 
 }
 

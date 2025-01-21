@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-
+#define MOD 998244353
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -23,30 +23,8 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
-
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
-
+    
 }
 
 int main(){

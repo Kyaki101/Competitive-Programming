@@ -23,30 +23,36 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
-
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
+    ll n, m;
+    cin >> n >> m;
+    vector<vector<ll> > cows(n, vector<ll>(m));
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            cin >> cows[i][j];
+        }
+        sort(ALL(cows[i]));
+    }
+    map<ll, ll> places;
+    for(int i = 0; i < n; i++) {
+        places[i] = 0;
+    }
+    for(int i = 0; i < n; i++) {
+        for(int j = 1; j < m; j++) {
+            if(cows[i][j] - cows[i][j - 1] != n) {
+                cout << -1 << endl;
+                return;
+            }
 
+        }
+    }
+    for(int i = 0; i < n; i++) {
+        places[cows[i][0]] = i + 1;
+    }
+    for(auto i : places) {
+        cout << i.second << ' ';
+    }
+    cout << endl;
 }
 
 int main(){

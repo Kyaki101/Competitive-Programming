@@ -24,28 +24,54 @@ using namespace std;
 const int MAX = 2e5+20;
 
 
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
+void comb(vector<vector<ll> > & combs, ll index, vector<ll> & a, vector<ll> current) {
+    if(index == a.size()) {
+        if(current.size() >= 1) {
+            combs.push_back(current);
+        }
+        return;
     }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
+    comb(combs, index + 1, a, current);
+    current.push_back(a[index]);
+    comb(combs, index + 1, a, current);
+}
 
+
+ll lcm(vector<ll> & a, ll n) {
+    ll ans = 1;
+    for(int i = 0; i < a.size(); i++) {
+        if(n / a[i] < ans) {
+            return -1;
+        }
+        ans *= a[i];
+    }
+    return ans;
 }
 
 void sol(){        
     ll n, k;
     cin >> n >> k;
-    cout << f(n, k) << endl;
+    vector<ll> a(k);
+    for(int i = 0; i < k; i++) {
+        cin >> a[i];
+    }
+    ll ans = 0;
+    vector<vector<ll> > combs;
+    comb(combs, 0, a, {});
+    for(vector<ll> i : combs) {
+        ll p = lcm(i, n);
+        if(p != -1) {
+            if(i.size() & 1) {
+                ans += n / p;
+            }
+            else {
+                ans -= n / p;
+            }
+        }
+
+    }
+    cout << ans << endl;
+
 
 }
 
@@ -55,7 +81,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

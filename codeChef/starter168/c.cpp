@@ -23,30 +23,29 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
-
-}
-
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
+    ll n, x, k;
+    cin >> n >> x >> k;
+    string a;
+    cin >> a;
+    ll ans = 0;
+    reverse(ALL(a));
+    ll inversions = 0;
+    ll z = 0;
+    for(int i = 0; i < n; i++) {
+        if(a[i] == '0') z++;
+        if(a[i] == '1') {
+            inversions += z;
+        }
 
+    }
+    if(inversions == 0 || inversions % k == 0 && inversions <= x) {
+        cout << 1 << endl;
+        return;
+    }
+    cout << 2 << endl;
+
+    
 }
 
 int main(){

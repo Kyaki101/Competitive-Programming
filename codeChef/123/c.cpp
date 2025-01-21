@@ -23,30 +23,54 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
-
-}
-
 void sol(){        
     ll n, k;
     cin >> n >> k;
-    cout << f(n, k) << endl;
-
+    vector<ll> a(n);
+    map<ll, ll> mapa;
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+        mapa[a[i]] ++;
+    }
+    ll num;
+    ll maxi = 0;
+    for(auto i : mapa) {
+        if((i.second >= maxi && i.first == k) || i.second > maxi) {
+            maxi = i.second;
+            num = i.first;
+        }
+    }
+    if(num == k) {
+        cout << 0 << endl;
+        return;
+    }
+    mapa.clear();
+    maxi = 0;
+    for(int i = 0; i < n; i++) {
+        mapa[a[i]] ++;
+        if(mapa[a[i]] >= maxi && a[i] == k) {
+            cout << 1 << endl;
+            return;
+        }
+        if(mapa[a[i]] > maxi) {
+            maxi = mapa[a[i]];
+            num = a[i];
+        }
+    }
+    mapa.clear();
+    maxi = 0;
+    for(int i = n - 1; i > -1; i--) {
+        mapa[a[i]] ++;
+        if(mapa[a[i]] >= maxi && a[i] == k) {
+            cout << 1 << endl;
+            return;
+        }
+        if(mapa[a[i]] > maxi) {
+            maxi = mapa[a[i]];
+            num = a[i];
+        }
+    }
+    cout << 2 << endl;
 }
 
 int main(){

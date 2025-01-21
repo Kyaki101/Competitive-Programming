@@ -24,29 +24,47 @@ using namespace std;
 const int MAX = 2e5+20;
 
 
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
 
+bool found(ll n, multiset<ll> & pool) {
+    if(pool.find(n) != pool.end()) {
+        pool.erase(pool.find(n));
+        return true;
+    }
+    if(n == 1) return false;
+    return found((n + 1) / 2, pool) && found(n / 2, pool);
 }
 
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
-
+    ll n, m;    
+    cin >> n >> m;
+    vector<ll> a(n), b(m);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    multiset<ll> smalls;
+    multiset<ll> pool;
+    for(int i = 0; i < m; i++) {
+        cin >> b[i];
+        smalls.insert(b[i]);
+    }
+    
+    for(int i = 0; i < n; i++) {
+        if(smalls.find(a[i]) != smalls.end()) {
+            smalls.erase(smalls.find(a[i]));
+        }
+        else pool.insert(a[i]);
+    }
+    for(auto i : smalls) {
+        if(!found(i, pool)) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    if(pool.size() > 0) {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
 }
 
 int main(){

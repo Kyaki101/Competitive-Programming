@@ -23,69 +23,23 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
-
-bool cmp(vector<ll> & a, vector<ll> & b) {
-    for(int i = 0; i < a.size(); i++) {
-        if(a[i] < b[i]) return false;
-        if(a[i] > b[i]) return true;
-    }
-    return true;
-}
-
 void sol(){        
     ll n;
     cin >> n;
+    ll maxi = 0;
     vector<ll> a(n);
-    ll index = 0, maxi = 0;
+    string ans = "";
     for(int i = 0; i < n; i++) {
         cin >> a[i];
         if(a[i] > maxi) {
+            cout << "1 ";
             maxi = a[i];
-            index = i;
         }
-    }
-    ll sInd = 0;
-    for(int i = 0; i < n; i++) {
-        if(a[i] == maxi - 1) sInd = i;
-    }
-    if(index != 0) {
-        for(int i = index; i < n; i++) {
-            cout << a[i] << ' ';
+        else {
+            cout << "0 ";
         }
-        ll l = 0;
-        for(int i = 0; i < index; i++) {
-            if(a[i] <= a[index - 1]) {
-                l = i;
-                break;
-            }
-        }
-        for(int i = index - 1; i >= l; i--) {
-            cout << a[i] << ' ';
-        }
-        for(int i = 0; i < l; i++) {
-            cout << a[i] << ' ';
-        }
-        cout << endl;
-        return;
-    }
 
-    ll l = 0;
-    for(int i = sInd; i < n; i++) {
-        cout << a[i] << ' ';
     }
-
-           for(int i = 0; i < sInd; i++) {
-            if(a[i] <= a[sInd - 1]) {
-                l = i;
-                break;
-            }
-        }
-        for(int i = sInd - 1; i >= l; i--) {
-            cout << a[i] << ' ';
-        }
-        for(int i = 0; i < l; i++) {
-            cout << a[i] << ' ';
-        }
     cout << endl;
 }
 

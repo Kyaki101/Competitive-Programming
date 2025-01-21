@@ -24,29 +24,31 @@ using namespace std;
 const int MAX = 2e5+20;
 
 
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
-    }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
 
-}
+vector<ll> primes;
+ll sieve[1000001] = {0};
 
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+        sieve[a[i]] ++;
+    }
+    ll maxi = 1;
 
+    for(int i = 1; i < 1000001; i++) {
+        ll cnt = 0;
+        for(int j = i; j < 1000001; j+= i) {
+            cnt += sieve[j];
+        }
+        if(cnt > 1) maxi = max(0LL + i, maxi);
+    }
+    cout << maxi << endl;
+
+
+    
 }
 
 int main(){
@@ -55,7 +57,10 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
+
+
+
     while(t--){
         sol();
     }

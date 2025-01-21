@@ -23,30 +23,30 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
+ll countBits(ll n) {
 
-ll f(ll n, ll k) {
-    if(k <= n / 2) {
-        return k * 2;
+    ll ans = 0;
+    for(int i = 0; i < 60; i++) {
+        if(TEST(n, i)) ans++;
     }
-    ll temp;
-    if(!(n & 1)) {
-        temp = f(n / 2, k - n / 2);
-    }
-    else {
-        temp = f(n / 2, k - ((n + 1) / 2));
-    }
-    if(n & 1) {
-        return temp * 2 + 1;
-    }
-    return temp * 2 - 1;
-
+    return ans;
 }
 
 void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    cout << f(n, k) << endl;
-
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    for(int i = 0; i < n; i++) {
+        if(countBits(a[i]) != countBits(a[a[i] - 1])) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    cout << "YES" << endl;
+    
 }
 
 int main(){
