@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -24,52 +24,30 @@ using namespace std;
 const int MAX = 2e5+20;
 
 void sol(){        
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
+    ll n, k;
+    cin >> n >> k;
+    vector<pair<ll, ll> > a(n);
     for(int i = 0; i < n; i++) {
-        cin >> a[i];
+        cin >> a[i].first;
+        a[i].second = i + 1;
     }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
-    }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
+    sort(ALL(a));
+    for(int i = 0; i < n; i++) {
+        ll l = i;
+        ll r = n;
+        while(l + 1 < r) {
+            ll mid = (l + r) / 2;
+            if(a[i].first + a[mid].first<= k) {
+                l = mid;
+            }
+            else r = mid;
         }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
+        if(a[l].first + a[i].first == k && l != i) {
+            cout << a[i].second << ' ' << a[l].second << endl;
             return;
         }
     }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
-    }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
-        }
-
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
-
-    }
-
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
-        return;
-    }
-
-
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
+    cout << "IMPOSSIBLE" << endl;
 }
 
 int main(){
@@ -78,7 +56,7 @@ int main(){
 
               
     int t;
-    cin >> t;
+    t = 1;
     while(t--){
         sol();
     }

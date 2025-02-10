@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -27,49 +27,56 @@ void sol(){
     ll n;
     cin >> n;
     vector<ll> a(n);
+    vector<ll> b(n);
     for(int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
+    for(int i = 0; i < n; i++) {
+        cin >> b[i];
     }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
-        }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
-            return;
-        }
-    }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
-    }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
-        }
+    set<ll> as;
+    set<ll> bs;
 
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
+    multiset<ll> x;
+    multiset<ll> y;
 
+    for(ll i : a) {
+        as.insert(i);
+        x.insert(i);
     }
 
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
+    for(ll i : b) {
+        bs.insert(i);
+        y.insert(i);
+    }
+
+    if(bs.size() >= 3) {
+        cout << "YES" << endl;
+        return;
+    }
+    if(as.size() >= 3) {
+        cout << "YES" << endl;
         return;
     }
 
+    if(as.size() == 2 && bs.size() == 2) {
+        ll ab = true;
+        ll bb = true;
+        for(auto i: as) {
+            if(x.count(i) == 1) ab = false;
+        }
 
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
+        for(auto i: bs) {
+            if(y.count(i) == 1) ab = false;
+        }
+        if(ab && bb) {
+            cout << "YES" << endl;
+            return;
+        }
+    }
+    cout << "NO" << endl;
+
+
 }
 
 int main(){

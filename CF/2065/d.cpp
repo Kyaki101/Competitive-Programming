@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -23,53 +23,59 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
+
+ll f(vector<ll> & a, ll n) {
+    ll ans = 0;
+    for(int i = 0; i < a.size(); i++) {
+        ans += a[i] * n;
+        n --;
+    } 
+    return ans;
+}
+
+ll g(vector<ll> & a, ll n) {
+    ll ans = 0;
+    for(int i = 0; i < a.size(); i++) {
+        ans += a[i] * n;
+        n ++;
+    }
+    return ans;
+}
+
 void sol(){        
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
+    ll n, m;
+    cin >> n >> m;
+
+    vector<vector<ll> > a(n, vector<ll>(m));
+
     for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
-    }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
-        }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
-            return;
+        for(int j = 0; j < m; j++) {
+            cin >> a[i][j];
         }
     }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
-    }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
+    std::sort(ALL(a), [&](vector<ll> & c, vector<ll> & b) {
+        ll fa = f(c, m);
+        ll fb = f(b, m);
+        ll s1 = 0;
+        ll s2 = 0;
+        for(int i = 0; i < m; i++) {
+            s1 += c[i];
+            s2 += b[i];
         }
-
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
-
+        if(s1 != s2) {
+            return s1 > s2;
+        }
+        return fa > fb;
+    });
+    ll ans = 0;
+    ll scalar = n * m;
+    for(int i = 0; i < n; i++) {
+        ans += f(a[i], scalar);
+        scalar -= m;
     }
-
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
-        return;
-    }
+    cout << ans << endl;
 
 
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
 }
 
 int main(){

@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -30,46 +30,45 @@ void sol(){
     for(int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
+    ll m;
+    cin >> m;
+    vector<string> b(m);
+    for(int i = 0; i < m; i++) {
+        cin >> b[i];
     }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
+    set<char> chars;
+    map<ll, char> mapa;
+    for(int i = 0; i < m; i++) {
+        mapa.clear();
+        chars.clear();
+        if(b[i].size() != a.size()) {
+            cout << "NO" << endl;
+            continue;
         }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
-            return;
+        bool bruh = true;
+        for(int j = 0; j < n; j++) {
+            if(chars.find(b[i][j]) == chars.end() && mapa.find(a[j]) != mapa.end() || chars.find(b[i][j]) != chars.end() && mapa.find(a[j]) == mapa.end()) {
+                cout << "NO" << endl;
+                bruh = false;
+                break;
+            }
+            else if(chars.find(b[i][j]) == chars.end() && mapa.find(a[j]) == mapa.end()) {
+                chars.insert(b[i][j]);
+                mapa[a[j]] = b[i][j];
+
+            }
+            else {
+                if(mapa[a[j]] != b[i][j]) {
+                    bruh = false;
+                    cout << "NO" << endl;
+                    break;
+                }
+            }
         }
-    }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
-    }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
-        }
 
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
+        if(bruh) cout << "YES" << endl;
 
     }
-
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
-        return;
-    }
-
-
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
 }
 
 int main(){

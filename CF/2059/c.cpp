@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -26,50 +26,57 @@ const int MAX = 2e5+20;
 void sol(){        
     ll n;
     cin >> n;
-    vector<ll> a(n);
+    vector<vector<ll> > a(n, vector<ll>(n));
     for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
-    }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
-        }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
-            return;
+        for(int j = 0; j < n; j++) {
+            cin >> a[i][j];
         }
     }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
+
+
+    for(vector<ll> & i : a) {
+        reverse(ALL(i));
     }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
+
+    vector<ll> acums(n);
+
+
+    for(int i = 0; i < n; i++) {
+        ll j = 0;
+        ll ans = 0;
+        while(a[i][j] == 1 && j < n) {
+            ans ++;
+            j++;
         }
-
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
-
+        if(ans == 0) {
+            acums[i] = -1;
+        }
+        else {
+            acums[i] = ans;
+        }
     }
 
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
+    sort(ALL(acums)); 
+
+    ll index = 0;
+    while(acums[index] == -1 && index < n) {
+        index ++;
+    }
+
+    ll finding = 1;
+    for(int i = index; i < n; i++) {
+
+        if(acums[i] >= finding) {
+            finding ++;
+        }
+    }
+
+    if(finding == n + 1) {
+        cout << n << endl;
         return;
     }
+    cout << finding << endl;
 
-
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
 }
 
 int main(){

@@ -23,65 +23,78 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
+
+void combinations(vector<vector<ll> > & combs, vector<ll> & a, ll index, vector<ll> current) {
+    if(index == a.size()) {
+        if(current.size() >= 1) {
+            combs.push_back(current);
+        }
+        return;
+    }
+    combinations(combs, a, index + 1, current);
+    current.push_back(a[index]);
+    combinations(combs, a, index + 1, current);
+}
+
+ll listProd(vector<ll> & a) {
+    ll prod = 1;
+    for(int i = 0; i < a.size(); i++) {
+        prod *= a[i];
+    }
+    return prod;
+}
+
+
+ll choose2(ll n) {
+    return (n * (n - 1)) / 2;
+}
+
 void sol(){        
     ll n;
     cin >> n;
     vector<ll> a(n);
     map<ll, ll> mapa;
-    ll maxi = 0;
     for(int i = 0; i < n; i++) {
         cin >> a[i];
         mapa[a[i]] ++;
-        maxi = max(a[i], maxi);
     }
-    vector<ll> twins(maxi + 1, 0);
-    vector<ll> mults(maxi + 1, 0);
-    vector<bool> sieve(maxi + 1, false);
-    sieve[0] = true;
-    sieve[1] = true;
-    for(int i = 2; i <= maxi; i++) {
-        if(!sieve[i]) {
-            if(mapa.find(i) != mapa.end()) {
-                mults[i] += mapa[i];
-            }
-            for(int j = i * 2; j <= maxi; j += i) {
-                sieve[j] = true;
-                if(mapa.find(j) != mapa.end()) mults[i] += mapa[j];
-            }
-
-        }
-    }
-
-    for(int i = 2; i <= maxi; i++) {
-        if(!sieve[i]) {
-            if(mapa.find(i) != mapa.end()) {
-                twins[i] = mults[i];
-            }
-            for(int j = i * 2; j <= maxi; j+= i) {
-                if(mapa.find(j) != mapa.end()) twins[j] += (mults[i] - mapa[i]);
+    vector<vector<ll> > divisors(1000001);
+    for(int i = 2; i < 1000001; i++) {
+        if(divisors[i].size() == 0) {
+            for(int j = i; j < 1000001; j+=i) {
+                divisors[j].push_back(i);
             }
         }
     }
-    ll ans = 0;
-    ll na = n;
-    if(mapa.find(1) != mapa.end()) {
-        for(int i = 0; i < mapa[1]; i++) {
-            ans += na;
-            na --;
+
+    vector<ll> mobius(1000001, 1);
+    vector<ll> primeCount(1000001, 0);
+    vector<bool> vis(1000001, 0);
+    for(int i = 0; i < n; i++) {
+        if(!vis[a[i]]) {
+            vis[a[i]] = true;
+            vector<vector<ll> > combs;
+            combinations(combs, divisors[a[i]], 0, {});
+            for(vector<ll> j : combs) {
+                ll prod = listProd(j);
+                if(j.size() & 1) {
+                    mobius[prod] = 1;
+                }
+                else mobius[prod] = -1;
+                primeCount[prod] += mapa[a[i]];
+            }
         }
-        n -= mapa[1];
+    }
+    ll ans = choose2(n);
+    ll tog = 0;
+
+    for(int i = 0; i < 1000001; i++) {
+        if(primeCount[i] > 1) {
+            tog += choose2(primeCount[i]) * mobius[i];
+        }
     }
 
-    for(int i = 2; i < maxi + 1 && n > 0; i++) {
-        if(twins[i] != 0) {
-            cout << i << ": " << twins[i] << endl;
-            if((n - (twins[i] + mapa[i])) * mapa[i] > 0) ans += (n - (twins[i] + mapa[i])) * mapa[i], n -= mapa[i];
-        }
-    }
-    cout << ans << endl;
-
-
-
+    cout << ans - tog << endl;
 }
 
 int main(){

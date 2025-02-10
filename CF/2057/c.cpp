@@ -24,22 +24,31 @@ using namespace std;
 const int MAX = 2e5+20;
 
 ll msb(ll n) {
-    ll ms;
-    for(int i = 0; i < 40; i++) {
-        if(TEST(n, i)) {
-            ms = i;
-        }
+    ll res = -1;
+    for(int i = 0; i < 60; i++) {
+        if(TEST(n, i)) res = i;
     }
-    return ms;
+    return res;
 }
 
 void sol(){        
     ll l, r;
     cin >> l >> r;
+    ll mid = 0;
     ll ms = msb(r);
-    ll nums[2] = {r, r};
-    cout << r << ' ' << r - 1 << ' ' << r - 2 << endl;
+    ll br = ms;
+    for(int i = ms; i > -1 && TEST(r, i) == TEST(l, i); i--) {
+        br = i;
+    }
+    if(TEST(r, br) == TEST(l, br)) {
+        br --;
+    }
 
+    mid = l | ((1 << br) - 1);
+    ll b = mid + 1;
+    ll c = (mid == l? r : l);
+
+    cout << mid << ' ' << b << ' ' << c << endl;
 }
 
 int main(){

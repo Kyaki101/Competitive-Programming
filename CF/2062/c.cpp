@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -23,53 +23,51 @@ using namespace std;
 
 const int MAX = 2e5+20;
 
+
+ll sum(vector<ll> & a) {
+    ll sum = 0;
+    for(int i = 0; i < a.size(); i++) {
+        sum += a[i];
+    }
+    return sum;
+}
+
 void sol(){        
     ll n;
     cin >> n;
+    ll maxi = -(1 << 30);
     vector<ll> a(n);
     for(int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
-    }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
+    vector<ll> b;
+    vector<ll> c;
+    while(a.size() > 1) {
+        maxi = max(maxi, sum(a));
+        for(int i = 0; i < a.size() - 1; i++) {
+            c.push_back(a[i + 1] - a[i]);
+
         }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
-            return;
+        reverse(ALL(a));
+        for(int i = 0; i < a.size() - 1; i++) {
+            b.push_back(a[i + 1] - a[i]);
+
         }
-    }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
-    }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
+        maxi = max(sum(b), maxi);
+        maxi = max(sum(c), maxi);
+        if(sum(c) < sum(b)) {
+            a = c;
+        }
+        else {
+            a = b;
         }
 
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
+        b.clear();
+        c.clear();
 
     }
-
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
-        return;
-    }
-
-
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
+    maxi = max(sum(a), maxi);
+    cout << maxi << endl;
 }
 
 int main(){

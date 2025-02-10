@@ -15,7 +15,7 @@ using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_pr
 #define DEBUG(n) (cout << (n) << endl)
 #define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
 #define ALL(v) (v).begin(), (v).end()
-#define MOD 998244353
+
 
 typedef long long int ll;
 typedef std::vector<int> vec;
@@ -24,52 +24,47 @@ using namespace std;
 const int MAX = 2e5+20;
 
 void sol(){        
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
-    for(int i = 0; i < n; i++) {
+    ll n, m, k;
+    cin >> n >> m >> k;
+    ll w;
+    cin >> w;
+    vector<ll> a(w);
+    for(int i = 0; i < w; i++) {
         cin >> a[i];
     }
-    vector<bool> liars(n, false);
-    ll l = 0;
-    if(a[0] > 0) {
-        liars[0] = true;
-        l = 1;
-    }
-    for(int i = 1; i < n; i++) {
-        if(a[i] > (i + 1) / 2 || a[i] < l) {
-            liars[i] = true;
-            l ++;
+    vector<ll> ans;
+    for(ll i = 1; i <= n; i++) {
+        for(ll j = 1; j <= m; j++) {
+            ll horizontal = 0;
+            ll vert = 0;
+            if(i <= k) {
+                horizontal = min(i, n - k + 1);
+            }
+            else if(i > k) {
+                horizontal = min(n - i + 1, k);
+            }
+
+            if(j <= k) {
+                vert = min(j, m - k + 1);
+            }
+            else {
+                vert = min(m - j + 1, k);
+            }
+
+            ans.push_back(vert * horizontal);
+
+            
         }
-        if(liars[i] && liars[i - 1]) {
-            cout << 0 << endl;
-            return;
-        }
     }
-    vector<ll> dp(n, 0);
-    if(a[0] == 0) {
-        dp[0] = 1;
+    sort(ans.rbegin(), ans.rend());
+    sort(a.rbegin(), a.rend());
+    ll res = 0;
+
+    for(int i = 0; i < w; i++) {
+        res += a[i] * ans[i];
     }
-    if(a[1] == 0 || a[1] == 1) {
-        dp[1] = 1;
-    }
-    for(int i = 2; i < n; i++) {
-        if(a[i] == a[i - 1]) {
-            dp[i] += dp[i - 1] % MOD;
-            dp[i] % MOD;
-        }
+    cout << res<< endl;
 
-        if(a[i - 2] + 1 == a[i]) dp[i] += dp[i - 2] % MOD, dp[i] % MOD;
-
-    }
-
-    if(n == 1) {
-        cout << dp[0] + 1 << endl;
-        return;
-    }
-
-
-    cout << (dp[n - 1] + dp[n - 2]) % MOD << endl;
 }
 
 int main(){
