@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define SET(m, i) ((m) | (1ULL << (i)))
+#define TEST(m, i) ((m) & (1ULL << (i)))
+#define CLEAR(m, i) ((m) &~ (1ULL << (i)))
+#define DEBUG(n) cout<<#n<<" = "<<n<<endl
+#define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
+#define ALL(v) (v).begin(), (v).end()
+typedef long long int ll;
+const int MAX = 2e5+20, MOD = 1e9+7;
+int t=1;
+
+void solve(){        
+    ll n;
+    cin >> n;
+    map<ll, ll> mapa;
+    for(int i = 0; i < n; i++) {
+        ll x;
+        cin >> x;
+        mapa[x] ++;
+    }
+
+    ll maxi = 0;
+
+    for(auto i : mapa) {
+        maxi += i.second / 2;
+    }
+
+    cout << maxi << endl;
+}
+
+signed main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    cin>>t;
+    while(t--){
+        solve();
+    }return 0;
+}
+
