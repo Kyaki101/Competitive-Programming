@@ -1,0 +1,19 @@
+[
+  {
+    "directory": "/Users/emanuelrojas/Competitive-Programming/CF/2110",
+    "command": "/opt/homebrew/bin/g++-14 -std=gnu++20 -I/opt/homebrew/opt/gcc/include/c++/14 -I/opt/homebrew/opt/gcc/include/c++/14/aarch64-apple-darwin23 -I/opt/homebrew/opt/gcc/lib/gcc/14/include -c a.cpp",
+    "file": "a.cpp"
+  }
+,
+  {
+    "directory": "/Users/emanuelrojas/Competitive-Programming/CF/2110",
+    "command": "/opt/homebrew/bin/g++-14 -std=gnu++20 -I/opt/homebrew/opt/gcc/include/c++/14 -I/opt/homebrew/opt/gcc/include/c++/14/aarch64-apple-darwin23 -I/opt/homebrew/opt/gcc/lib/gcc/14/include -c b.cpp",
+    "file": "b.cpp"
+  }
+,
+  {
+    "directory": "/Users/emanuelrojas/Competitive-Programming/CF/2110",
+    "command": "/opt/homebrew/bin/g++-14 -std=gnu++20 -I/opt/homebrew/opt/gcc/include/c++/14 -I/opt/homebrew/opt/gcc/include/c++/14/aarch64-apple-darwin23 -I/opt/homebrew/opt/gcc/lib/gcc/14/include -c c.cpp",
+    "file": "c.cpp"
+  }
+]

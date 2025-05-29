@@ -7,11 +7,32 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-typedef long long int ll;
+#define vec vector
+#define snd second
+#define fst first
+#define pb push_back
+#define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
-int t=1;
+ll n;
 
 
+bool possible(ll x, string & s, vector<ll> & a, ll k) {
+    ll n = s.size();
+
+    bool painting = false;
+
+    for(int i = 0; i < n; i++) {
+        if(!painting && s[i] == 'B' && a[i] > x) {
+            painting = true;
+            k --;
+        }
+        else if(painting && s[i] == 'R' && a[i] > x) {
+            painting = false;
+        }
+    }
+
+    return k >= 0;
+}
 
 void solve(){        
     ll n, k;
@@ -23,22 +44,22 @@ void solve(){
         cin >> a[i];
     }
 
-    ll l = 0;
-    ll index = 0;
-    priority_queue<ll> cola;
-    for(int i = 0; i < n; i++) {
-        if(s[i] == 'R') cola.push(a[i]);
+    ll r = (1 << 30);
+    ll l = -1;
+    while(l + 1 < r) {
+        ll mid = (l + r) / 2;
+        if(possible(mid, s, a, k)) {
+            r = mid;
+        }
+        else l = mid;
     }
-
-    while(!cola.empty() && k > 1) {
-        cola.pop();
-    }
-        
+    cout << r << endl;
 }
 
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
+    int t=1;
     cin>>t;
     while(t--){
         solve();

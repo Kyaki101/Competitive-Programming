@@ -7,45 +7,44 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-typedef long long int ll;
+#define vec vector
+#define snd second
+#define fst first
+#define pb push_back
+#define ll long long
 const int MAX = 2e5+20, MOD = 998244353;
-int t=1;
-
-
+ll n;
 
 void solve(){        
     ll n;
     cin >> n;
     vector<ll> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    vector<ll> acum(n, 0);
-    ll streak = 0;
-    ll ones = 0;
-    ll threes = 0;
-    for(int i = 0; i < n; i++) if(a[i] == 3) threes ++;
+    for(ll &i : a) cin >> i;
+    vector<vector<ll>> dp(n + 1, vector<ll>(4, 0));
 
-    ll ans = 0;
+    for(int i = 1; i <= n; i++) {
+        if(a[i - 1] == 1) {
+            dp[i][1] = ((dp[i - 1][1] % MOD) + 1) % MOD;
 
-    for(int i = 0; i < n; i++) {
-        if(a[i] == 2) streak ++;
-        if(streak && a[i] != 2) {
-            cout << ones << ' ' << threes << ' ' << streak << endl;
-            ll first = ((1LL << streak) - 1) % MOD;
-            ll second = ((first % MOD) * (threes % MOD)) % MOD;
-            ll third = ((second % MOD) * (ones % MOD)) % MOD;
-            ans = ((ans % MOD) + (third % MOD)) % MOD;
-            streak = 0;
+            dp[i][2] = dp[i - 1][2];
+            dp[i][3] = dp[i - 1][3]; 
+
         }
+        else if(a[i - 1] == 2) {
+            dp[i][2] = (((2 * (dp[i - 1][2] % MOD)) % MOD) + (dp[i - 1][1] % MOD)) % MOD;
 
-        if(a[i] == 1) ones ++;
+            dp[i][1] = dp[i - 1][1];
+            dp[i][3] = dp[i - 1][3];
+        }
+        else if(a[i - 1] == 3) {
+            dp[i][3] = ((dp[i - 1][3] % MOD) + (dp[i - 1][2] % MOD)) % MOD;
 
-        if(a[i] == 3) threes --;
+            dp[i][1] = dp[i - 1][1];
+            dp[i][2] = dp[i - 1][2];
+        }
     }
 
-    cout << ans << endl;
-
+    cout << dp[n][3] << endl;
 
 
 
@@ -54,6 +53,7 @@ void solve(){
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
+    int t=1;
     cin>>t;
     while(t--){
         solve();
