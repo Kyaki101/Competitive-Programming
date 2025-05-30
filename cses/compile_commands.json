@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/Users/emanuelrojas/Competitive-Programming/cses",
+    "command": "/opt/homebrew/bin/g++-14 -std=gnu++20 -I/opt/homebrew/opt/gcc/include/c++/14 -I/opt/homebrew/opt/gcc/include/c++/14/aarch64-apple-darwin23 -I/opt/homebrew/opt/gcc/lib/gcc/14/include -c *.cpp",
+    "file": "*.cpp"
+  }
+]
