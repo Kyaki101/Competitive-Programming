@@ -13,34 +13,26 @@ using namespace std;
 #define pb push_back
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
-ll n;
-
-
-ll fill(vector<ll> & dp, ll x, vector<ll> & a) {
-    if(x < 0) return (1 << 30);
-    if(x == 0) return 0;
-    if(dp[x]) return dp[x];
-
-    ll mini = (1 << 30);
-    for(int i = 0; i < a.size(); i++) {
-        mini = min(mini, fill(dp, x - a[i], a));
-    }
-    return dp[x] = 1 + mini;
-
-}
 
 void solve(){        
     ll n, x;
     cin >> n >> x;
     vector<ll> a(n);
-    for(ll &i : a) cin >> i;
-    vector<ll> dp(x + 1);
-    fill(dp, x, a);
-    if(dp[x] >= (1 << 29)) {
+    for(auto &i : a) cin >> i;
+    vector<ll> memo(x + 1, (1 << 30));
+    memo[0] = 0;
+    for(int i = 1; i <= x; i++) {
+        for(int j = 0; j < n; j++) {
+            if(i - a[j] >= 0) {
+                memo[i] = min(memo[i], memo[i - a[j]] + 1);
+            }
+        }
+    }
+    if(memo[x] == (1 << 30)) {
         cout << -1 << endl;
         return;
     }
-    cout << dp[x] << endl;
+    cout << memo[x] << endl;
 }
 
 signed main(){

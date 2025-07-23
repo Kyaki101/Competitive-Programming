@@ -13,19 +13,14 @@ using namespace std;
 #define pb push_back
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
-vector<ll> memo(1000001, 0);
 
-ll expo(ll n, ll x) {
-    if(x == 0) return 1;
-    if(x & 1) return ((n % MOD) * (expo(n, x - 1) % MOD)) % MOD;
-    ll y = expo(n, x / 2);
-    return ((y % MOD) * (y % MOD)) % MOD;
-}
+vector<vector<ll>> dp(1000002, vector<ll>(2, 0));
 
 void solve(){        
     ll n;
     cin >> n;
-    cout << memo[n] << endl;
+    ll ans = ((dp[n][0] + dp[n][1]) % MOD);
+    cout << ans << endl;
     
 }
 
@@ -34,9 +29,15 @@ signed main(){
     cin.tie(0); cout.tie(0);
     int t=1;
     cin>>t;
-    memo[1] = 2;
-    for(int i = 2; i <= 1000000; i++) {
-        memo[i] = ((memo[i - 1] % MOD) * (2 % MOD) + (expo(2, i) % MOD)) % MOD;
+    dp[1][1] = 1;
+    dp[1][0] = 1;
+    for(int i = 1; i < 1000000; i++) {
+        dp[i + 1][0] += 2 * dp[i][0];
+        dp[i + 1][1] += dp[i][0];
+        dp[i + 1][0] += dp[i][1];
+        dp[i + 1][1] += 4 * dp[i][1];
+        dp[i + 1][0] %= MOD;
+        dp[i + 1][1] %= MOD;
     }
     while(t--){
         solve();

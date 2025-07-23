@@ -14,23 +14,21 @@ using namespace std;
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-ll fill(vector<ll> & memo, ll n) {
-    if(n < 0) return 0;
-    if(n == 0) return 1;
-    if(memo[n]) return memo[n];
-    return memo[n] = ((fill(memo, n - 1) % MOD) + (fill(memo, n - 2) % MOD) + (fill(memo, n - 3) % MOD) + (fill(memo, n - 4) % MOD) + (fill(memo, n - 5) % MOD) + (fill(memo, n - 6) % MOD)) % MOD;
+
+ll dp(ll curr, vector<ll> & memo) {
+    if(curr == 0) return 1;
+    if(curr < 0) return 0;
+    if(memo[curr] != -1) {
+        return memo[curr];
+    }
+    return memo[curr] = ((dp(curr - 1, memo) % MOD) + (dp(curr - 2, memo) % MOD) + (dp(curr - 3, memo) % MOD) + (dp(curr - 4, memo) % MOD) + (dp(curr - 5, memo) % MOD) + (dp(curr - 6, memo) % MOD)) % MOD;
 }
 
-
 void solve(){        
-    ll n;
-    cin >> n;
-    vector<ll> memo(n + 1, 0);
-    fill(memo, n);
-    cout << memo[n] << endl;;
+    ll n; cin >> n;
+    vector<ll> memo(n + 1, -1);
+    cout << dp(n, memo) << endl;
 
-
-        
 }
 
 signed main(){

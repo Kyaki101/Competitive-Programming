@@ -14,31 +14,22 @@ using namespace std;
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-ll fill(vector<ll> & memo, ll x, vector<ll> & a, vector<bool> & vis) {
-    if(x < 0) return 0;
-    if(x == 0) return 1;
-    if(vis[x]) return memo[x];
-    vis[x] = true;
-    ll val = 0;
-    for(int i = 0; i < a.size(); i++) {
-        val = ((val % MOD) + (fill(memo, x - a[i], a, vis) % MOD) % MOD);
-    }
-    return memo[x] = val;
-}
-
 void solve(){        
     ll n, x;
     cin >> n >> x;
     vector<ll> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
+    for(auto &i : a) cin >> i;
     vector<ll> memo(x + 1, 0);
-    vector<bool> vis(x + 1, false);
-    fill(memo, x, a, vis);
-    cout << memo[x] % MOD << endl;
+    memo[0] = 1;
+    for(int i = 1; i <= x; i++) {
+        for(int j = 0; j < n; j++) {
+            if(i - a[j] >= 0) {
+                memo[i] = (memo[i]  + memo[i - a[j]]) % MOD;
+            }
+        }
+    }
+    cout << memo[x] << endl;
 }
-
 
 signed main(){
     ios::sync_with_stdio(0);

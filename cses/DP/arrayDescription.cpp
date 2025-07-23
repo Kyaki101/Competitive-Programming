@@ -13,40 +13,56 @@ using namespace std;
 #define pb push_back
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
-ll n;
 
 void solve(){        
     ll n, m;
     cin >> n >> m;
     vector<ll> a(n);
-    for(ll &i: a) cin >> i;
+    for(auto &i : a) cin >> i;
     if(m == 1) {
-        cout << 1 << endl; return;
+        cout << 1 << endl;
+        return;
     }
-        
     vector<vector<ll>> dp(n, vector<ll>(m + 1, 0));
-    for(int i = 0; i < n; i++) {
+    for(int i = n - 1; i > -1; i--) {
         if(a[i] != 0) {
-            if(i == 0) dp[0][a[i]] = 1;
+            if(i == n - 1) {
+                dp[i][a[i]] = 1;
+            }
             else {
-                if(a[i] == m) dp[i][m] = ((dp[i - 1][m - 1] % MOD) + (dp[i - 1][m] % MOD)) % MOD;
-                else if(a[i] == 1) dp[i][a[i]] = ((dp[i - 1][1] % MOD) + (dp[i - 1][2] % MOD)) % MOD;
-                else dp[i][a[i]] = ((dp[i - 1][a[i] - 1] % MOD) + (dp[i - 1][a[i]] % MOD) + (dp[i - 1][a[i] + 1] % MOD)) % MOD;
+                if(a[i] == 1) {
+                    dp[i][a[i]] = ((dp[i + 1][a[i]]) % MOD + (dp[i + 1][a[i] + 1] % MOD)) % MOD;
+                }
+                else if(a[i] == m) {
+                    dp[i][a[i]] = ((dp[i + 1][a[i]]) % MOD + (dp[i + 1][a[i] - 1] % MOD)) % MOD;
+                }
+                else {
+                    dp[i][a[i]] = ((dp[i + 1][a[i]]) % MOD + (dp[i + 1][a[i] - 1] % MOD) + (dp[i + 1][a[i] + 1])) % MOD;
+                }
+
             }
             continue;
         }
-        for(ll int j = 1; j <= m; j++) {
-            if(i == 0) dp[0][j] = 1;
+        for(int j = 1; j <= m; j++) {
+            if(i == n - 1) {
+                dp[i][j] = 1;
+            }
+            else if(j == 1) {
+                dp[i][j] = ((dp[i + 1][j] % MOD) + (dp[i + 1][j + 1] % MOD)) % MOD;
+            }
+            else if(j == m) {
+                dp[i][j] = ((dp[i + 1][j]) % MOD + (dp[i + 1][j - 1] % MOD)) % MOD;
+            }
             else {
-                if(j == m) dp[i][j] = ((dp[i - 1][m] % MOD) + (dp[i - 1][m - 1] % MOD)) % MOD;
-                else if(j == 1) dp[i][j] = ((dp[i - 1][1] % MOD) + (dp[i - 1][2] % MOD)) % MOD;
-                else dp[i][j] = ((dp[i - 1][j - 1] % MOD) + (dp[i - 1][j] % MOD) + (dp[i - 1][j + 1] % MOD)) % MOD;
+                dp[i][j] = ((dp[i + 1][j]) % MOD + (dp[i + 1][j + 1] % MOD) + (dp[i + 1][j - 1] % MOD)) % MOD;
             }
         }
+
+
     }
     ll ans = 0;
-    for(int i = 1; i <= m; i++) {
-        ans = ((ans % MOD) + (dp[n - 1][i] % MOD)) % MOD;
+    for(int j = 1; j <= m; j++) {
+        ans = (ans + dp[0][j]) % MOD;
     }
     cout << ans << endl;
 

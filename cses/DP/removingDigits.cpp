@@ -14,31 +14,21 @@ using namespace std;
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-
-ll memoize(ll n, vector<ll> & memo) {
-    if(n < 0) return (1 << 30);
-    if(n == 0) return 0;
-    if(memo[n]) return memo[n];
-    ll val = (1 << 30);
-    string s = to_string(n);
-    for(int i = 0; i < s.size(); i++) {
-        if(s[i] != '0') {
-            ll v = s[i] - '0';
-            val = min(val, memoize(n - v, memo) + 1);
+void solve(){        
+    ll n;
+    cin >> n;
+    vector<ll> memo(n + 1, (1 << 30));
+    memo[0] = 0;
+    for(int i = 1; i <= n; i++) {
+        ll num = i;
+        while(num > 0) {
+            ll digit = num % 10;
+            memo[i] = min(memo[i], memo[i - digit] + 1);
+            num /= 10;
         }
     }
-    return memo[n] = val;
-}
+    cout << memo[n] << endl;
 
-void solve(){        
-    ll x;
-    cin >> x;
-    vector<ll> memo(x + 1, 0);
-    memoize(x, memo);
-    cout << memo[x] << endl;
-
-
-    
 }
 
 signed main(){

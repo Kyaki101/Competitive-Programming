@@ -11,27 +11,26 @@ using namespace std;
 #define snd second
 #define fst first
 #define pb push_back
-#define ll int 
+#define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
-
-
-
 
 void solve(){        
     ll n, x;
     cin >> n >> x;
-    vector<ll> pages(n);
-    vector<ll> price(n);
-    for(ll &i : price) cin >> i;
-    for(ll &i : pages) cin >> i;
-    vector<ll> dp(x + 1);
+    vector<ll> p(n);
+    for(auto &i : p) cin >> i;
+    vector<ll> v(n);
+    for(auto &i : v) cin >> i;
+    vector<ll> dp(x + 1, 0);
     for(int i = 0; i < n; i++) {
-        for(int j = x; j >= price[i]; j--) {
-            dp[j] = max(dp[j], pages[i] + dp[j - price[i]]);
+        for(int j = x; j >= p[i]; j--) {
+            dp[j] = max(dp[j - p[i]] + v[i], dp[j]);
         }
+
     }
+
     cout << dp[x] << endl;
-    
+
 }
 
 signed main(){

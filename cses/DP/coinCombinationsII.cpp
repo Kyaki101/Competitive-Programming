@@ -14,22 +14,22 @@ using namespace std;
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-
-
-
 void solve(){        
     ll n, x;
     cin >> n >> x;
     vector<ll> a(n);
-    for(ll &i : a) cin >> i;
+    for(auto &i : a) cin >> i;
     vector<ll> memo(x + 1, 0);
     memo[0] = 1;
-    for(int i = 0; i < n; i++) {
-        for(int j = 1; j <= x; j++) {
-            if(j - a[i] >= 0) memo[j] = ((memo[j] % MOD) + (memo[j - a[i]] % MOD)) % MOD;  
+    for(int j = 0; j < n; j++) {
+        for(int i = 1; i <= x; i++) {
+            if(i - a[j] >= 0) {
+                memo[i] = (memo[i] + memo[i - a[j]]) % MOD;
+            }
         }
     }
     cout << memo[x] << endl;
+
 }
 
 signed main(){

@@ -14,44 +14,38 @@ using namespace std;
 #define ll long long
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-ll moves[4][2] = {{1, 0}, {0, 1}};
 
-ll cover(ll n, ll i, ll j, vector<string> & mat, vector<vector<ll> > & memo, vector<vector<bool>> & vis) {
-    if(mat[i][j] == '*') {
-        vis[i][j] = true;
-        return memo[i][j] = 0;
-    }
-
-    if(i == n - 1 && j == n - 1) return memo[i][j] = 1;
-
-    if(vis[i][j]) {
-        return memo[i][j];
-    }
-
-    vis[i][j] = true;
-    ll val = 0;
-    for(int k = 0; k < 2; k++) {
-        ll x = i + moves[k][0];
-        ll y = j + moves[k][1];
-        if(x > -1 && y > -1 && x < n && y < n) {
-            val = ((val % MOD) + (cover(n, x, y, mat, memo, vis) % MOD)) % MOD;
-        }
-    }
-    return memo[i][j] = val;
-
-
-}
+int moves[4][2] = {{1, 0}, {0, 1}};
 
 void solve(){        
     ll n;
     cin >> n;
     vector<string> mat(n);
-    for(auto &i: mat) cin >> i;
-    vector<vector<ll>> memo(n, vector<ll>(n, 0));
+    for(int i = 0; i < n; i++) cin >> mat[i];
     vector<vector<bool>> vis(n, vector<bool>(n, false));
-    cover(n, 0, 0, mat, memo, vis);
+    vector<vector<ll>> memo(n, vector<ll>(n, 0));
+    memo[n - 1][n - 1] = 1;
+    vis[n - 1][n - 1] = true;
+    if(mat[0][0] == '*') {
+        cout << 0 << endl;
+        return;
+    }
+    function<ll (ll, ll)> dfs = [&](ll i, ll j) {
+        if(vis[i][j]) {
+            return memo[i][j];
+        }
+        vis[i][j] = true;
+        for(int k = 0; k < 2; k++) {
+            ll x = i + moves[k][0];
+            ll y = j + moves[k][1];
+            if(x < n && x > -1 && y < n && y > -1 && mat[x][y] != '*') {
+                memo[i][j] = (memo[i][j] + dfs(x, y)) % MOD;
+            }
+        }
+        return memo[i][j];
+    };
+    dfs(0, 0);
     cout << memo[0][0] << endl;
-
 }
 
 signed main(){
