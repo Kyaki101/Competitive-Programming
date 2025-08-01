@@ -16,7 +16,20 @@ using namespace std;
 const ll MAX = 2e5+20, MOD = 1e9+7;
 
 void solve(){        
-
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    for(auto &i : a) cin >> i;
+    ll score = 0;
+    for(int i = 0; i < n; i++) {
+        if(a[i] == 0) {
+            score ++;
+        }
+        else {
+            score += a[i];
+        }
+    }
+    cout << score << endl;
 }
 
 signed main(){
