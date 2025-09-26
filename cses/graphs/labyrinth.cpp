@@ -7,106 +7,103 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-ll moves[4][2] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+ll moves[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-bool found = false;
-ll x, y;
+map<ll, char> mv;
 
-bool valid(ll i, ll j, ll n, ll m, vector<string> & mat, vector<vector<bool>> & vis) {
-    return i > -1 && j > -1 && i < n && j < m && mat[i][j] != '#' && !vis[i][j];
-}
+map<char, pair<ll, ll>> nxt;
 
 
-void bfs(ll a, ll b, ll n, ll m, vector<string> & mat, vector<vector<bool>> & vis, vector<vector<char>> & steps) {
-    vis[a][b] = true;
+string bfs(ll e1, ll e2, ll s1, ll s2, vector<string> & mat, vector<vector<bool>> & vis) {
+    ll n = mat.size();
+    ll m = mat[0].size();
+    vector<vector<char>> path(n, vector<char>(m, ' '));
     queue<pair<ll, ll>> cola;
-    cola.push({a, b});
+    cola.push({s1, s2});
+    vis[s1][s2] = true;
     while(!cola.empty()) {
-        pair<ll, ll> curr = cola.front();
+        auto [i, j] = cola.front();
         cola.pop();
-        if(mat[curr.first][curr.second] == 'B') {
-            found = true;
-            x = curr.first;
-            y = curr.second;
-            return;
-        }
-        for(int i = 0; i < 4; i++) {
-            pair<ll, ll> temp = {curr.first + moves[i][0], curr.second + moves[i][1]};
-            if(valid(temp.first, temp.second, n, m, mat, vis)) {
-                if(i == 0) steps[temp.first][temp.second] = 'U';
-                if(i == 1) steps[temp.first][temp.second] = 'L';
-                if(i == 2) steps[temp.first][temp.second] = 'D';
-                if(i == 3) steps[temp.first][temp.second] = 'R';
-                vis[temp.first][temp.second] = true;
-                cola.push(temp);
-            }
-            
 
+        for(int k = 0; k < 4; k++) {
+            ll x = i + moves[k][0];
+            ll y = j + moves[k][1];
+            if(x < n && y < m && x > -1 && y > -1 && mat[x][y] != '#' && !vis[x][y]) {
+                vis[x][y] = true;
+                path[x][y] = mv[k];
+                cola.push({x, y});
+            }
         }
     }
-}
+    if(!vis[e1][e2]) {
+        return " ";
+    }
+    string ans = "";
+    while(e1 != s1 || e2 != s2) {
+        ans.PB(path[e1][e2]);
+        ll r1 = e1;
+        e1 += nxt[path[e1][e2]].first;
+        e2 += nxt[path[r1][e2]].second;
+    }
+    reverse(ALL(ans));
+    return ans;
 
+
+}
 
 void solve(){        
     ll n, m;
     cin >> n >> m;
     vector<string> mat(n);
-    vector<vector<bool>> vis(n, vector<bool>(m));
-    for(int i = 0; i < n; i++) {
-        cin >> mat[i];
-    }
-    vector<vector<char>> steps(n, vector<char>(m));
-
+    for(auto &i : mat) cin >> i;
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+    ll s1, s2;
+    ll e1, e2;
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < m; j++) {
             if(mat[i][j] == 'A') {
-                bfs(i, j, n, m, mat, vis, steps);
-                break;
+                s1 = i; s2 = j;
+            }
+            if(mat[i][j] == 'B') {
+                e1 = i; e2 = j;
             }
         }
     }
-
-    if(!found) {
+    string pre = bfs(e1, e2, s1, s2, mat, vis);
+    if(pre == " ") {
         cout << "NO" << endl;
         return;
     }
-
-    string ans = "";
-    while(mat[x][y] != 'A') {
-        if(steps[x][y] == 'U') {
-            ans.push_back('U');
-            x ++;
-        }
-        else if(steps[x][y] == 'D') {
-            ans.push_back('D');
-            x --;
-        }
-        else if(steps[x][y] == 'R') {
-            ans.push_back('R');
-            y --;
-        }
-        else if(steps[x][y] == 'L') {
-            ans.push_back('L');
-            y ++;
-        }
-    }
-    reverse(ALL(ans));
     cout << "YES" << endl;
-    cout << ans.size() << endl;
-    cout << ans << endl;
+    cout << pre.size() << endl;
+    cout << pre << endl;
 }
 
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
     int t=1;
+    nxt['U'] = {1, 0};
+    nxt['R'] = {0, -1};
+    nxt['D'] = {-1, 0};
+    nxt['L'] = {0, 1};
+
+    mv[0] = 'U';
+    mv[1] = 'R';
+    mv[2] = 'D';
+    mv[3] = 'L';
+
+
+
+
     while(t--){
         solve();
     }return 0;

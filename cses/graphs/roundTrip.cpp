@@ -7,96 +7,69 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-ll u, v;
 
-bool bfs(ll node, vector<vector<ll>> & g, vector<ll> & parents) {
-    parents[node] = node;
-    queue<ll> cola;
-    cola.push(node);
-    while(!cola.empty()) {
-        node = cola.front();
-        cola.pop();
-        for(auto i : g[node]) {
-            if(!parents[i]) {
-                parents[i] = node;
-                cola.push(i);
+bool dfs(vector<vll> & g, ll node, vector<bool> & vis, vll & p, vector<ll> & path) {
+    vis[node] = true;
+    for(auto i : g[node]) {
+        if(vis[i]) {
+            if(i != p[node]) {
+                path.PB(i);
+                path.PB(node);
+                return true;
             }
-            else if(parents[node] != i) {
-                if(parents[i] != 0) {
-                    u = node;
-                    v = i;
-                    return true;
-                }
-            }
+            continue;
+        }
+        p[i] = node;
+        if(dfs(g, i, vis, p, path)) {
+            path.PB(node);
+            return true;
         }
     }
     return false;
+
+
 }
 
 void solve(){        
-    ll n, m;    
+    ll n, m;
     cin >> n >> m;
-    vector<vector<ll>> g(n + 1);
+    vector<vll> g(n + 1);
     for(int i = 0; i < m; i++) {
-        ll x, y;
-        cin >> x >> y;
-        g[x].push_back(y);
-        g[y].push_back(x);
+        ll a, b;
+        cin >> a >> b;
+        g[a].PB(b);
+        g[b].PB(a);
     }
-    bool f = false;
-    vector<ll> parents(n + 1, 0);
+    vector<ll> path;
+    vector<ll> p(n + 1, 0);
+    vector<bool> vis(n + 1, false);
     for(int i = 1; i <= n; i++) {
-        if(!parents[i]) {
-            if(bfs(i, g, parents)) {
-                f = true;
-                break;
+
+        if(!vis[i] && dfs(g, i, vis, p, path)) {
+            ll size = 1;
+            ll i = 1;
+            while(path[i] != path[0]) i++, size++;
+            size ++;
+            cout << size << endl;
+            cout << path[0] << ' ';
+            i = 1;
+            while(path[i] != path[0]) {
+                cout << path[i] << ' ';
+                i++;
             }
+            cout << path[0] << endl;
+            return;
         }
     }
-    if(!f) {
-        cout << "IMPOSSIBLE" << endl;
-        return;
-    }
-
-    set<ll> first;
-    vector<ll> ans1, ans2;
-    ll inter = 0;
-    while(parents[u] != u) {
-        ans1.push_back(u);
-        first.insert(u);
-        u = parents[u];
-    }
-    ans1.push_back(u);
-    first.insert(u);
-
-    while(parents[v] != v && first.find(v) == first.end()) {
-        ans2.push_back(v);
-        v = parents[v];
-
-    }
-    ans2.push_back(v);
-    inter = v;
-    reverse(ALL(ans2));
-
-    ll i = 0;
-    vector<ll> res;
-    while(ans1[i] != inter) {
-        res.push_back(ans1[i]);
-        i++;
-    }
-    for(int j = 0; j < ans2.size(); j++) {
-        res.push_back(ans2[j]);
-    }
-    cout << res.size() + 1 << endl;
-    for(auto i : res) cout << i << ' ';
-    cout << ans1[0] << endl;
+    cout << "IMPOSSIBLE" << endl;
 
 }
 

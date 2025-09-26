@@ -1,35 +1,29 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
 using namespace std;
-template <typename Key, typename Value>
-using ordered_map = tree<Key, Value, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename Key, typename Value = null_type>
-using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_prefix_search_node_update>;
+
 #define SET(m, i) ((m) | (1ULL << (i)))
 #define TEST(m, i) ((m) & (1ULL << (i)))
 #define CLEAR(m, i) ((m) &~ (1ULL << (i)))
-#define DEBUG(n) (cout << (n) << endl)
-#define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
+#define DEBUG(n) cout<<#n<<" = "<<n<<endl
+#define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
 
+const int MAX = 2e5+20, MOD = 1e9+7;
 
-typedef long long int ll;
-typedef std::vector<int> vec;
-using namespace std;
-
-const int MAX = 2e5+20;
-
-void sol(){        
+void solve(){        
     ll n, k;
     cin >> n >> k;
-    vector<pair<ll, ll> > a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i].first;
-        a[i].second = i + 1;
+    vector<pair<ll, ll>> a(n);
+    ll c = 0;
+    for(auto &[x, y] : a) {
+        cin >> x;
+        y = c;
+        c++;
     }
     sort(ALL(a));
     for(int i = 0; i < n; i++) {
@@ -37,31 +31,25 @@ void sol(){
         ll r = n;
         while(l + 1 < r) {
             ll mid = (l + r) / 2;
-            if(a[i].first + a[mid].first<= k) {
-                l = mid;
-            }
+            if(a[mid].first + a[i].first <= k) l = mid;
             else r = mid;
         }
-        if(a[l].first + a[i].first == k && l != i) {
-            cout << a[i].second << ' ' << a[l].second << endl;
+        if(l != i && a[l].first + a[i].first == k) {
+            cout << a[i].second + 1 << ' ' << a[l].second + 1 << endl;
             return;
         }
     }
     cout << "IMPOSSIBLE" << endl;
+
+
 }
 
-int main(){
+signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
-
-              
-    int t;
-    t = 1;
+    int t=1;
     while(t--){
-        sol();
-    }
-
-
-    return 0;
+        solve();
+    }return 0;
 }
 

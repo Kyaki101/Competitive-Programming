@@ -7,46 +7,66 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
 
-struct UnionFind{
-    vector<int> uf;
-    void init(int n){uf.assign(n, -1);}
-    int Find(int i){return (uf[i]==-1)? i : uf[i] = Find(uf[i]);}
-    bool Union(int i, int j){
-        bool e = Find(i)==Find(j);
-        if(!e) uf[Find(i)] = Find(j);
-        return e;
+
+struct UF { 
+    vector<ll> link;
+    vector<ll> size;
+    void init(ll n) {
+        link.assign(n + 1, 0);
+        size.assign(n + 1, 0);
+        for(int i = 1; i <= n; i++) {
+            link[i] = i;
+            size[i] = 1;
+        }
     }
+    ll find(ll x) {
+        while(link[x] != x) x = link[x];
+        return x;
+    }
+    bool same(ll x, ll y) {
+        return find(x) == find(y);
+    }
+    void unite(ll a, ll b) {
+        if(same(a, b)) return;
+        a = find(a);
+        b = find(b);
+        if(size[a] < size[b]) swap(a, b);
+        size[a] += size[b];
+        link[b] = a;
+    }
+
 };
+
+
 
 void solve(){        
     ll n, m;
     cin >> n >> m;
-    UnionFind uf;
+    UF uf;
     uf.init(n);
-    vector<pair<ll, ll>> moves;
     for(int i = 0; i < m; i++) {
-        ll x, y;
-        cin >> x >> y;
-        x --;
-        y --;
-        uf.Union(x, y);
+        ll a, b;
+        cin >> a >> b;
+        uf.unite(a, b);
     }
-    for(int i = 1; i < n; i++) {
-        if(uf.Find(i) != uf.Find(0)) {
-            moves.push_back({1, i + 1});
-            uf.Union(0, i);
+    vll roads;
+    for(int i = 2; i <= n; i++) {
+        if(!uf.same(1, i)) {
+            roads.PB(i);
+            uf.unite(1, i);
         }
     }
-    cout << moves.size() << endl;
-    for(auto i : moves) {
-        cout << i.first << ' ' << i.second << endl;
+    cout << roads.size() << endl;
+    for(auto i : roads) {
+        cout << 1 << ' ' << i << endl;
     }
     
 }

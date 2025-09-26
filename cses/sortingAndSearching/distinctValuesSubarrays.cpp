@@ -7,30 +7,47 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
 
 void solve(){        
     ll n;
     cin >> n;
-    vector<ll> a(n);
+    vll a(n);
     for(auto &i : a) cin >> i;
-    map<ll, ll> freq;
-    ll l = 0;
-    ll count = 0;
-    for(int r = 0; r < n; r++) {
-        freq[a[r]] ++;
-        while(freq[a[r]] > 1) {
-            freq[a[l]] --;
-            l ++;
+    set<ll> nums;
+    ll old = 0;
+    ll ans = 0;
+    queue<ll> q;
+    for(int i = 0; i < n; i++) {
+        if(nums.find(a[i]) != nums.end()) {
+            ll c = q.size();
+            ans += ((c * (c + 1)) / 2) - ((old * (old + 1)) / 2);
+            while(q.front() != a[i]) {
+                nums.erase(q.front());
+                q.pop();
+            }
+            q.pop();
+            old = q.size();
+            q.push(a[i]);
+            if(i == n - 1) ans += ((q.size() * (q.size() + 1)) / 2) - ((old * (old + 1)) / 2);
         }
-        count += r - l + 1;
+        else if(i == n - 1) {
+            q.push(a[i]);
+            ll c = q.size();
+            ans += ((c * (c + 1)) / 2) - ((old * (old + 1)) / 2);
+        }
+        else {
+            q.push(a[i]);
+            nums.insert(a[i]);
+        }
     }
-    cout << count << endl;
+    cout << ans << endl;
 }
 
 signed main(){

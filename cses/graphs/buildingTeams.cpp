@@ -7,31 +7,29 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
-const int MAX = 2e5+20, MOD = 1e9+7;
-ll n;
+typedef vector<ll> vll;
 
-bool bfs(ll node, vector<vector<ll>> & g, vector<ll> & colors) {
-    colors[node] = 1;
-    queue<ll> cola;
-    cola.push(node);
-    while(!cola.empty()) {
-        node = cola.front();
-        cola.pop();
-        for(auto i : g[node]) {
-            if(!colors[i]) {
-                if(colors[node] == 1) colors[i] = 2;
-                else colors[i] = 1;
-                cola.push(i);
-            }
-            else if(colors[i] == colors[node]) return false;
+const int MAX = 2e5+20, MOD = 1e9+7;
+
+bool dfs(vector<vector<ll>> & g, ll node, vector<bool> & vis, vector<bool> & c) {
+    vis[node] = true;
+    bool state = true;
+    for(auto i : g[node]) {
+        if(vis[i]) {
+            if(c[i] == c[node]) state = false;
+            continue;
         }
+        c[i] = !c[node];
+        state = state && dfs(g, i, vis, c);
     }
-    return true;
+    return state;
+
+
+
 }
 
 void solve(){        
@@ -39,26 +37,28 @@ void solve(){
     cin >> n >> m;
     vector<vector<ll>> g(n + 1);
     for(int i = 0; i < m; i++) {
-        ll x, y;
-        cin >> x >> y;
-        g[x].push_back(y);
-        g[y].push_back(x);
+        ll a, b;
+        cin >> a >> b;
+        g[a].PB(b);
+        g[b].PB(a);
     }
-    vector<ll> colors(n + 1, 0);
+    vector<bool> vis(n + 1, false);
+    vector<bool> color(n + 1);
+    bool state = true;
     for(int i = 1; i <= n; i++) {
-        if(!colors[i]) {
-             if(!bfs(i, g, colors)) {
-                cout << "IMPOSSIBLE" << endl;
-                return;
-            }           
-        }
-
+        if(!vis[i]) state = state && dfs(g, i, vis, color);
     }
-
+    if(!state) {
+        cout << "IMPOSSIBLE" << endl;
+        return;
+    }
     for(int i = 1; i <= n; i++) {
-        cout << colors[i] << ' ';
+        if(color[i]) cout << 1 << ' ';
+        else cout << 2 << ' ';
     }
     cout << endl;
+
+
 }
 
 signed main(){

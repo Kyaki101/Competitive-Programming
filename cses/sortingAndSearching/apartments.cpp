@@ -1,65 +1,46 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
 using namespace std;
-template <typename Key, typename Value>
-using ordered_map = tree<Key, Value, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename Key, typename Value = null_type>
-using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_prefix_search_node_update>;
+
 #define SET(m, i) ((m) | (1ULL << (i)))
 #define TEST(m, i) ((m) & (1ULL << (i)))
 #define CLEAR(m, i) ((m) &~ (1ULL << (i)))
-#define DEBUG(n) (cout << (n) << endl)
-#define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
+#define DEBUG(n) cout<<#n<<" = "<<n<<endl
+#define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
 
+const int MAX = 2e5+20, MOD = 1e9+7;
 
-typedef long long int ll;
-typedef std::vector<int> vec;
-using namespace std;
-
-const int MAX = 2e5+20;
-
-void sol(){        
+void solve(){        
     ll n, m, k;
     cin >> n >> m >> k;
     vector<ll> a(n), b(m);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    for(int i = 0; i < m; i++) {
-        cin >> b[i];
-    }
+    for(auto &i : a) cin >> i;
+    for(auto &i : b) cin >> i;
     sort(ALL(a));
     sort(ALL(b));
     ll i = 0, j = 0;
     ll ans = 0;
     while(i < n && j < m) {
-        if(abs(a[i] - b[j]) <= k) {
-            i ++; j++;
-            ans ++;
+        if(b[j] >= a[i] - k && b[j] <= a[i] + k) {
+            ans ++; i++; j++;
         }
-        else if(a[i] - b[j] < 0) i++;
-        else j++;
+        else if(b[j] > a[i] + k) i++;
+        else if(b[j] < a[i] - k) j++;
     }
     cout << ans << endl;
 }
 
-int main(){
+signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
-
-              
-    int t;
-    t = 1;
+    int t=1;
     while(t--){
-        sol();
-    }
-
-
-    return 0;
+        solve();
+    }return 0;
 }
 

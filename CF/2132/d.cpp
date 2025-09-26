@@ -16,19 +16,19 @@ using namespace std;
 const ll MAX = 2e5+20, MOD = 1e9+7;
 
 
+vector<ll> dp(19, 0);
+
 ll digitSum(ll n) {
-    ll res = 0;
-    ll factor = 1;
-    
-    while(n > 0) {
-        ll d = n % 10;
-        n /= 10;
-        res += d * (d - 1) / 2 * factor;
-        res += d * (n * 45 * factor);
-        factor *= 10;
+    if(n < 10) {
+        return (n * (n + 1)) / 2;
     }
-    return res;
+    ll d = (ll)(log10(n));
+    ll p = (ll)(ceil(pow(10LL, d)));
+    ll msd = n / p;
+
+    return (msd * dp[d] + ((msd * (msd - 1)) / 2) * p + msd * (1 + n % p) + digitSum(n % p));
 }
+
 
 
 void solve(){        
@@ -41,7 +41,7 @@ void solve(){
         l++;
         curr *= 10;
     }
-    ll n = (k - 1) / l + (ll)pow(10, l - 1);
+    ll n = (k - 1) / l + (ll)pow(10LL, l - 1);
     string num = to_string(n);
     ll ans = 0;
     for(int i = 0; i < (k - 1) % l + 1; i++) {
@@ -58,6 +58,11 @@ signed main(){
     cin.tie(0); cout.tie(0);
     int T=1;
     cin>>T;
+    dp[0] = 0;
+    dp[1] = 45;
+    for(int i = 2; i <= 18; i++) {
+        dp[i] = dp[i - 1] * 10 + 45 * (ll)(ceil(pow(10LL, i - 1)));
+    }
     while(T--){
         solve();
         //cout<<(solve()? "YES" : "NO")<<endl;
