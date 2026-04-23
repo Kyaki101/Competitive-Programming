@@ -1,92 +1,63 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
 using namespace std;
-template <typename Key, typename Value>
-using ordered_map = tree<Key, Value, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename T>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template <typename Key, typename Value = null_type>
-using trie = trie<Key, Value, trie_string_access_traits<>, pat_trie_tag, trie_prefix_search_node_update>;
+
 #define SET(m, i) ((m) | (1ULL << (i)))
 #define TEST(m, i) ((m) & (1ULL << (i)))
 #define CLEAR(m, i) ((m) &~ (1ULL << (i)))
-#define DEBUG(n) (cout << (n) << endl)
-#define CLEAN(arr) (memset(arr, 0, sizeof(arr)))
+#define DEBUG(n) cout<<#n<<" = "<<n<<endl
+#define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
 
+const int MAX = 2e5+20, MOD = 1e9+7;
 
-typedef long long int ll;
-typedef std::vector<int> vec;
-using namespace std;
-
-const int MAX = 2e5+20;
-
-
-void comb(vector<vector<ll> > & combs, ll index, vector<ll> & a, vector<ll> current) {
-    if(index == a.size()) {
-        if(current.size() >= 1) {
-            combs.push_back(current);
-        }
+void comb(ll i, vector<ll> & a, vector<pair<ll, ll>> & ans, pair<ll, ll> curr, ll maxi) {
+    if(i == a.size()) {
+        ans.PB(curr);
         return;
     }
-    comb(combs, index + 1, a, current);
-    current.push_back(a[index]);
-    comb(combs, index + 1, a, current);
+    pair<ll, ll> cpy = curr;
+    if(a[i] <= maxi / cpy.first) {
+        cpy.first *= a[i];
+        cpy.second ++;
+        comb(i + 1, a, ans, cpy, maxi);
+    }
+
+    comb(i + 1, a, ans, curr, maxi);
+
 }
 
-
-ll lcm(vector<ll> & a, ll n) {
-    ll ans = 1;
-    for(int i = 0; i < a.size(); i++) {
-        if(n / a[i] < ans) {
-            return -1;
+void solve(){        
+    ll m, n;
+    cin >> m >> n;
+    vector<ll> a(n);
+    for(auto &i : a) cin >> i;
+    vector<pair<ll, ll>> ans;
+    comb(0, a, ans, {1, 0}, m);
+    ll res = 0;
+    for(auto i : ans) {
+        if(i.second == 0) continue;
+        if(i.second & 1) {
+            res += m / i.first;
         }
-        ans *= a[i];
-    }
-    return ans;
-}
-
-void sol(){        
-    ll n, k;
-    cin >> n >> k;
-    vector<ll> a(k);
-    for(int i = 0; i < k; i++) {
-        cin >> a[i];
-    }
-    ll ans = 0;
-    vector<vector<ll> > combs;
-    comb(combs, 0, a, {});
-    for(vector<ll> i : combs) {
-        ll p = lcm(i, n);
-        if(p != -1) {
-            if(i.size() & 1) {
-                ans += n / p;
-            }
-            else {
-                ans -= n / p;
-            }
+        else {
+            res -= m / i.first;
         }
-
     }
-    cout << ans << endl;
-
+    cout << res << endl;
 
 }
 
-int main(){
+signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
-
-              
-    int t;
-    t = 1;
+    int t=1;
     while(t--){
-        sol();
-    }
-
-
-    return 0;
+        solve();
+    }return 0;
 }
 

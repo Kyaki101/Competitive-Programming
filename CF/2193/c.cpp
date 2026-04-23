@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define SET(m, i) ((m) | (1ULL << (i)))
+#define TEST(m, i) ((m) & (1ULL << (i)))
+#define CLEAR(m, i) ((m) &~ (1ULL << (i)))
+#define DEBUG(n) cout<<#n<<" = "<<n<<endl
+#define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
+#define ALL(v) (v).begin(), (v).end()
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
+
+const int MAX = 2e5+20, MOD = 1e9+7;
+
+void solve(){        
+    ll n, q;
+    cin >> n >> q;
+    vll a(n), b(n);
+    for(auto &i : a) cin >> i;
+    for(auto &i : b) cin >> i;
+
+    vll suff(n);
+    suff[n - 1] = max(a[n - 1], b[n - 1]);
+    for(int i = n - 2; i > -1; i--) {
+        suff[i] = max(a[i], max(suff[i + 1], b[i]));
+    }
+    vll pref(n + 1);
+    partial_sum(ALL(suff), ++pref.begin());
+
+    while(q--) {
+        ll l, r;
+        cin >> l >> r;
+        cout << pref[r] - pref[l - 1] << ' ';
+    }
+    cout << endl;
+
+    
+}
+
+signed main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    int t=1;
+    cin>>t;
+    while(t--){
+        solve();
+    }return 0;
+}
+

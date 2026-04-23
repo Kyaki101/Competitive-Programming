@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+#include <queue>
+using namespace std;
+
+#define SET(m, i) ((m) | (1ULL << (i)))
+#define TEST(m, i) ((m) & (1ULL << (i)))
+#define CLEAR(m, i) ((m) &~ (1ULL << (i)))
+#define DEBUG(n) cout<<#n<<" = "<<n<<endl
+#define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
+#define ALL(v) (v).begin(), (v).end()
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
+
+const int MAX = 2e5+20, MOD = 1e9+7;
+
+void solve(){        
+    ll n;
+    cin >> n;
+    vll a(n);
+    map<ll, ll> mapa;
+    for(auto &i : a) cin >> i, mapa[i] ++;
+    priority_queue<ll, vll, greater<ll>> smol;
+    priority_queue<ll> big;
+    for(auto [x, y] : mapa) {
+        for(int i = 0; i < y / 2; i++) {
+            big.push(x);
+            smol.push(x);
+        }
+    }
+    if(big.size() < 4) {
+        cout << "NO" << endl;
+        return;
+    }
+
+    cout << "YES" << endl;
+    ll x1, x2;
+    ll y1, y2;
+    x1 = smol.top();
+    x2 = big.top();
+    smol.pop(), big.pop();
+    y1 = smol.top(), y2 = big.top();
+    smol.pop(), big.pop();
+    cout << x1 << ' ' << y1 << ' ';
+    cout << x1 << ' ' << x2 << ' ';
+    cout << y2 << ' ' << y1 << ' ';
+    cout << y2 << ' ' << x2 << ' ';
+    cout << endl;
+
+
+}
+
+signed main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    int t=1;
+    cin>>t;
+    while(t--){
+        solve();
+    }return 0;
+}
+

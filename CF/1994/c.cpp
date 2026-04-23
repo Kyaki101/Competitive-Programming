@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <numeric>
 using namespace std;
 
 #define SET(m, i) ((m) | (1ULL << (i)))
@@ -7,23 +8,45 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-typedef long long int ll;
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
-int t=1;
 
 void solve(){        
     ll n, x;
     cin >> n >> x;
-    vector<ll> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
+    vll a(n);
+    for(auto &i : a) cin >> i;
+    vll acum(n + 1, 0);
+    partial_sum(ALL(a), acum.begin() + 1);
+    vll dp(n + 2, 0);
+    for(int i = n; i > 0; i--) {
+        ll l = i - 1;
+        ll r = n + 1;
+        while(l + 1 < r) {
+            ll mid = (l + r) / 2;
+            if(acum[mid] - acum[i - 1] <= x) l = mid;
+            else r = mid;
+        }
+        if(r == n + 1) {
+            dp[i] = r - i;
+            continue;
+        }
+        dp[i] = dp[r + 1] + (r - i);
     }
+    cout << accumulate(ALL(dp), 0LL) << endl;
 
+    
 }
 
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
+    int t=1;
     cin>>t;
     while(t--){
         solve();

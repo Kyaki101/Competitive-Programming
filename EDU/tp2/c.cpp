@@ -7,37 +7,37 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-typedef long long int ll;
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
-int t=1;
 
 void solve(){        
     ll n, k;
     cin >> n >> k;
     vector<ll> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-
+    for(auto &i : a) cin >> i;
     ll l = 0;
-    ll sum = 0;
-    ll cnt = 0;
+    ll suma = 0;
+    ll ans = 0;
     for(int r = 0; r < n; r++) {
-        sum += a[r];
-        while(sum > k) {
-            sum -= a[l];
-            l ++; 
+        suma += a[r];
+        while(suma > k) {
+            suma -= a[l];
+            l ++;
         }
-
-        ll seg = r - l + 1;
-        cnt += r - l + 1;
+        ans += (r - l + 1);
     }
-    cout << cnt << endl;
+    cout << ans << endl;
 }
 
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
+    int t=1;
     while(t--){
         solve();
     }return 0;

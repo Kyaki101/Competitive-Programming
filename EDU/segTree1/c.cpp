@@ -7,100 +7,104 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
-const int MAX = 2e5+20, MOD = 1e9+7;
+#define pll pair<ll, ll>
+typedef vector<ll> vll;
 
+const int MAX = 2e5+20, MOD = 1e9+7;
 
 struct segTree {
     ll size;
-    vector<pair<ll, ll>> mins;
+    vector<pll> heap;
 
-    void init(ll n) {
-        size = 1;
-        while(size < n) size *= 2;
-        mins.assign(size * 2, {(1LL << 60), 0});
+    void init(long long unsigned n) {
+        size = bit_ceil()
+        heap.assign(2 * size, {(1LL << 60), 0});
     }
 
-
     void set(ll i, ll v, ll x, ll lx, ll rx) {
-        if(rx - lx == 1) {
-            mins[x] = {v, 1};
+        if(lx + 1 == rx) {
+            heap[x] = {v, 1};
             return;
         }
-        ll mid = (lx + rx) / 2;
-        if(i < mid) {
+        ll mid = (rx + lx) / 2;
+        if(mid > i) {
             set(i, v, 2 * x + 1, lx, mid);
         }
         else {
             set(i, v, 2 * x + 2, mid, rx);
         }
+        auto left = heap[2 * x + 1];
+        auto right = heap[2 * x + 2];
+        if(left.first == right.first) {
+            heap[x] = {left.first, left.second + right.second};
+            return;
+        }
+        if(left.first < right.first) {
+            heap[x] = left;
+            return;
+        }
 
-        if(mins[2 * x + 1].first < mins[2 * x + 2].first) {
-            mins[x] = mins[2 * x + 1];
-            return;
-        }
-        if(mins[2 * x + 2].first < mins[2 * x + 1].first) {
-            mins[x] = mins[2 * x + 2];
-            return;
-        }
-        mins[x] = {mins[2 * x + 1].first, mins[2 * x + 1].second + mins[2 * x + 2].second};
+        heap[x] = right;
+
     }
-
     void set(ll i, ll v) {
         set(i, v, 0, 0, size);
     }
 
-    pair<ll, ll> query(ll l, ll r, ll x, ll lx, ll rx) {
-        if(rx <= l || lx >= r) return {(1LL << 60), 0};
-        if(l <= lx && r >= rx) return mins[x];
-        pair<ll, ll> m1, m2;
+    pll query(ll l, ll r, ll x, ll lx, ll rx) {
+        if(lx >= l && rx <= r) {
+            return heap[x];
+        }
+        if(rx <= l || lx >= r) {
+            return {(1LL << 60), 0};
+        }
+
         ll mid = (lx + rx) / 2;
-        m1 = query(l, r, 2 * x + 1, lx, mid);
-        m2 = query(l, r, 2 * x + 2, mid, rx);
-        if(m1.first < m2.first) return m1;
-        if(m2.first < m1.first) return m2;
-        return {m2.first, m1.second + m2.second};
+
+        auto left = query(l, r, 2 * x + 1, lx, mid);
+        auto right = query(l, r, 2 * x + 2, mid, rx);
+
+        if(left.first == right.first) {
+            return {right.first, right.second + left.second};
+        }
+        if(left.first < right.first) {
+            return left;
+        }
+        return right;
 
     }
-
-    pair<ll, ll> query(ll l, ll r) {
+    pll query(ll l, ll r) {
         return query(l, r, 0, 0, size);
     }
-
-
 
 };
 
 void solve(){        
     ll n, q;
     cin >> n >> q;
-    segTree st;
-    st.init(n);
+    segTree sTree;
+    sTree.init(n);
+    vector<ll> a(n);
+    for(auto &i : a) cin >> i;
     for(int i = 0; i < n; i++) {
-        ll x;
-        cin >> x;
-        st.set(i, x);
+        sTree.set(i, a[i]);
     }
-
     while(q--) {
-        ll op;
-        cin >> op;
-        if(op == 1) {
-            ll i, v;
-            cin >> i >> v;
-            st.set(i, v);
+        ll t, x, y;
+        cin >> t >> x >> y;
+        if(t == 1) {
+            sTree.set(x, y);
         }
         else {
-            ll l, r;
-            cin >> l >> r;
-            pair<ll, ll> que = st.query(l, r);
-            cout << que.first << ' ' << que.second << endl;
+            auto temp = sTree.query(x, y);
+            cout << temp.first << ' ' << temp.second << endl;
         }
     }
+    
 }
 
 signed main(){

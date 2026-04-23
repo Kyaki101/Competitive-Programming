@@ -7,52 +7,43 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
 
 void solve(){        
     ll n;
     cin >> n;
-    vector<ll> a(n);
-    vector<ll> b(n);
+    vll a(n), b(n);
     for(auto &i : a) cin >> i;
     for(auto &i : b) cin >> i;
+    for(int i = 0; i < n - 1; i++) {
+        if(a[i] % a[i + 1] != 0) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    for(int i = n - 1; i > 0; i--) {
+        if(b[i] % b[i - 1] != 0) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    if(a[n - 1] != b[0]) {
+        cout << "NO" << endl;
+        return;
+    }
     for(int i = 1; i < n; i++) {
-        if(a[i] > a[i - 1]) {
-            cout << "NO" << endl;
-            return;
-        }
-        if(b[i] < b[i - 1]) {
+        if(gcd(a[i - 1], b[i]) != b[0]) {
             cout << "NO" << endl;
             return;
         }
     }
-    for(int i = 0; i < n; i++) {
-        if(a[0] % a[i] != 0) {
-            cout << "NO" << endl;
-            return;
-        }
-        if(b[n - 1] % b[i] != 0) {
-            cout << "NO" << endl;
-            return;
-        }
-    }
-    if(n == 1) {
-        if(a[0] == b[0]) cout << "YES" << endl;
-        else cout << "NO" << endl;
-        return;
-    }
-    if(gcd(a[0], b[1]) == b[0] && gcd(b[n - 1], a[n - 2]) == a[n - 1]) {
-        cout << "YES" << endl;
-        return;
-    }
-    cout << "NO" << endl;
-    return;
-
+    cout << "YES" << endl;
 
 }
 

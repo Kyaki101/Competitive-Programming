@@ -7,53 +7,42 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-typedef long long int ll;
+#define F second
+#define S first
+#define PB push_back
+#define ll long long
+typedef vector<ll> vll;
+
 const int MAX = 2e5+20, MOD = 1e9+7;
-int t=1;
 
 void solve(){        
     ll n, m;
     cin >> n >> m;
-    vector<ll> a(n);
-    vector<ll> b(m);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    for(int i = 0; i < m; i++) {
-        cin >> b[i];
-    }
-
-
-    ll counter = 0;
-    ll i = 0;
+    vector<ll> a(n), b(m);
+    for(auto &i : a) cin >> i;
+    for(auto &i : b) cin >> i;
+    ll c = 0;
     ll j = 0;
-    while(i < n && j < m) {
-        if(a[i] == b[j]) {
-            ll x = 0;
-            ll y = 0;
-            ll test = a[i];
-            while(i < n && a[i] == test) {
-                x ++;
-                i++;
-            }
-            while(j < m && b[j] == test) {
-                y ++;
-                j++;
-            }
-            counter += y * x;
-
+    ll ans = 0;
+    ll curr = 0;
+    for(int i = 0; i < n; i++) {
+        while(j < m && b[j] <= a[i]) {
+            curr = b[j];
+            if(j == 0 || b[j] != b[j - 1]) c = 0;
+            j++;
+            c++;
         }
-        else if(a[i] < b[j]) {
-            i++;
+        if(curr == a[i]) {
+            ans += c;
         }
-        else j++;
     }
-    cout << counter << endl;
+    cout << ans << endl;
 }
 
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
+    int t=1;
     while(t--){
         solve();
     }return 0;

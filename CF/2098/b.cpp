@@ -18,13 +18,42 @@ const int MAX = 2e5+20, MOD = 1e9+7;
 void solve(){        
     ll n, k;
     cin >> n >> k;
-    deque<ll> dq;
-    for(int i = 0; i < n; i++) {
-        ll x;
-        cin >> x;
-        dq.push_back(x);
+    vll a(n);
+    for(auto &i : a) cin >> i;
+    sort(ALL(a));
+    if(n == 1) {
+        cout << 1 << endl;
+        return;
     }
-    sort(ALL(dq));
+
+
+
+    if(n & 1) {
+        if(k == 0) {
+            cout << 1 << endl;
+            return;
+        }
+        if(k & 1) {
+            k --; 
+        }
+        else {
+            k -= 2;
+        }
+        k = k / 2;
+        ll l = n / 2 - 1;
+        ll r = n / 2 + 1;
+
+        cout << a[r + k] - a[l - k] + 1 << endl;
+        return;
+    }
+
+    if(k == 1) {
+        cout << a[n / 2] - a[n / 2 - 1] + 1 << endl;
+        return;
+    }
+
+    k /= 2;
+    cout << 1 + a[n / 2 + k] - a[n / 2 - 1 - k]<< endl;
 
 }
 

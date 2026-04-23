@@ -7,55 +7,60 @@ using namespace std;
 #define DEBUG(n) cout<<#n<<" = "<<n<<endl
 #define MSET(arr, x, n) (memset(arr, x, (n)*sizeof(arr[0])))
 #define ALL(v) (v).begin(), (v).end()
-#define vec vector
-#define snd second
-#define fst first
-#define pb push_back
+#define F second
+#define S first
+#define PB push_back
 #define ll long long
-const int MAX = 2e5+20, MOD = 1e9+7;
+typedef vector<ll> vll;
 
+const int MAX = 2e5+20, MOD = 1e9+7;
 
 struct segTree {
     ll size;
-    vector<ll> mins;
+    vector<ll> heap;
 
     void init(ll n) {
         size = 1;
-        while(size < n) size *= 2;
-        mins.assign(size * 2, (1LL << 60));
+        while(size < n) {
+            size *= 2;
+        }
+        heap.assign(size * 2, (1LL << 60));
     }
 
     void set(ll i, ll v, ll x, ll lx, ll rx) {
-        if(rx - lx == 1) {
-            mins[x] = v;
+        if(lx + 1 == rx) {
+            heap[x] = v;
             return;
         }
-        ll m = (lx + rx) / 2;
-        if(i < m) {
-            set(i, v, 2 * x + 1, lx, m);
+        ll mid = (lx + rx) / 2;
+        if(mid > i) {
+            set(i, v, 2 * x + 1, lx, mid);
         }
         else {
-            set(i, v, 2 * x + 2, m, rx);
+            set(i, v, 2 * x + 2, mid, rx);
         }
-        
-        mins[x] = min(mins[2 * x + 1], mins[2 * x + 2]);
+        heap[x] = min(heap[x * 2 + 1], heap[2 * x + 2]);
     }
-
     void set(ll i, ll v) {
-        set(i, v, 0, 0, size);
+        return set(i, v, 0, 0, size);
     }
 
-    ll minimum(ll l, ll r, ll x, ll lx, ll rx) {
-        if(lx >= r || l >= rx) return (1LL << 60);
-        if(lx >= l && rx <= r) return mins[x];
+    ll query(ll l, ll r, ll x, ll lx, ll rx) {
+        if(lx >= l && rx <= r) {
+            return heap[x];
+        }
+        if(rx <= l || lx >= r) {
+            return (1LL << 60);
+        }
         ll mid = (lx + rx) / 2;
-        ll m1 = minimum(l, r, 2 * x + 1, lx, mid);
-        ll m2 = minimum(l, r, 2 * x + 2, mid, rx);
-        return min(m1, m2);
+        ll left = query(l, r, 2 * x + 1, lx, mid);
+        ll right = query(l, r, 2 * x + 2, mid, rx);
+        return min(left, right);
+
     }
 
-    ll minimum(ll l, ll r) {
-        return minimum(l, r, 0, 0, size);
+    ll query(ll l, ll r) {
+        return query(l, r, 0, 0, size);
     }
 
 };
@@ -63,30 +68,24 @@ struct segTree {
 void solve(){        
     ll n, q;
     cin >> n >> q;
-
-    segTree st;
-    st.init(n);
+    vector<ll> a(n);
+    for(auto &i : a) cin >> i;
+    segTree sTree;
+    sTree.init(n);
     for(int i = 0; i < n; i++) {
-        ll x;
-        cin >> x;
-        st.set(i, x);
+        sTree.set(i, a[i]);
     }
-
     while(q --) {
-        ll op;
-        cin >> op;
-        if(op == 1) {
-            ll i, v;
-            cin >> i >> v;
-            st.set(i, v);
+        ll t, x, y;
+        cin >> t >> x >> y;
+        if(t == 1) {
+            sTree.set(x, y);
         }
         else {
-            ll l, r;
-            cin >> l >> r;
-            cout << st.minimum(l, r) << endl;
+            cout << sTree.query(x, y) << endl;
         }
     }
-        
+    
 }
 
 signed main(){

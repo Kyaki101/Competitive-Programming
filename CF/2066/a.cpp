@@ -19,25 +19,40 @@ void solve(){
     ll n;
     cin >> n;
     vector<ll> a(n);
+    set<ll> nums;
+    map<ll, ll> mapa;
     for(int i = 0; i < n; i++) {
         cin >> a[i];
+        nums.insert(i + 1);
+        mapa[a[i]] = i + 1;
     }
-
-    cout << '?' << ' ' << 1 << ' ' << 2 << endl;
+    for(int i = 0; i < n; i++) {
+        nums.erase(a[i]);
+    }
+    if(!nums.empty()) {
+        cout << "? " << *nums.begin() << ' ' << a[0] << endl;
+        ll x;
+        cin >> x;
+        if(x == 0) {
+            cout << "! A" << endl;
+            return;
+        }
+        cout << "! B" << endl;
+        return;
+    }
+    cout << "? " << mapa[1] << ' ' << mapa[n] << endl;
     ll x;
     cin >> x;
-    if(x == 0) {
-        cout << '!' << ' ' << 'A' << endl;
+    cout << "? " << mapa[n] << ' ' << mapa[1] << endl;
+    ll y;
+    cin >> y;
+    if(x < n - 1 || x != y) {
+        cout << "! A" << endl;
         return;
     }
-    cout << '?' << ' ' << 2 << ' ' << 1 << endl;
-    cin >> x;
-    if(x == 0) {
-        cout << '!' << ' ' << 'A' << endl;
-        return;
-    }
+    cout << "! B" << endl;
+    
 
-    cout << '!' << ' ' << 'B' << endl;
 }
 
 signed main(){

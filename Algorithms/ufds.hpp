@@ -1,61 +1,27 @@
-#include <bits/stdc++.h>
+struct unionFind {
+	vector<int> parents;
+	vector<int> sizes;
 
-typedef long long int ll;
+	unionFind(int size) : parents(size), sizes(size, 1) {
+		for (int i = 0; i < size; i++) { parents[i] = i; }
+	}
 
-using namespace std;
-class UnionFind {
-private: vector<long long int> p, rank, size;
-public:
-    UnionFind(int n){
-        rank.assign(n, 0);
-        p.assign(n, 0);
-        size.assign(n, 1);
-        
-        for(long long int i = 0; i < n; i++){
-            p[i] = i;
-        }
-    }
-    long long int find(long long int i){
-        return (p[i] == i)? i : (p[i] = find(p[i]));
-    }
-    bool inSameSet(long long int i, long long int j){
-        return find(i) == find(j);
-    }
-    
-    void unionSet(long long int i, long long j){
-        if(!inSameSet(i, j)){
-            long long int x = find(i), y = find(j);
-            if(rank[x] > rank[y] ) {
-                p[y] = x;
-                size[x] += size[y];
-                size[y] = size[x];
-                
-
-            }
-            else{
-                p[x] = y;
-                size[y] += size[x];
-                size[x] = size[y];
-                if(rank[x] == rank[y]) rank[y] ++;
-            }
-        }
-    }
-    ll largestSet(){
-        ll largest = 0;
-        ll index = 0;
-        for(int i = 0; i < size.size(); i++){
-            if(size[i] > largest){
-                index = i;
-                largest = size[i];
-            }
-
-        }
-        return index;
+	int find(int x) { 
+        return parents[x] == x ? x : (parents[x] = find(parents[x])); 
     }
 
+	bool unite(int x, int y) {
+		int x_root = find(x);
+		int y_root = find(y);
+		if (x_root == y_root) { return false; }
 
+		if (sizes[x_root] < sizes[y_root]) { swap(x_root, y_root); }
+		sizes[x_root] += sizes[y_root];
+		parents[y_root] = x_root;
+		return true;
+	}
 
-    
+	bool connected(int x, int y) { 
+        return find(x) == find(y); 
+    }
 };
-
-
